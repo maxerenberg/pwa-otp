@@ -1,0 +1,8 @@
+.sidebar a {
+  text-decoration: none;
+}
+
+.sidebar a > span {
+  position: relative;
+  top: -1px;
+}

@@ -1,0 +1,44 @@
+/* Write your global styles here, in PostCSS syntax */
+
+@tailwind base;
+
+:root {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, Roboto,
+    Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+
+  color-scheme: light dark;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#app {
+  min-height: 100vh;
+  display: flex;
+  flex-flow: column nowrap;
+}
+
+/*
+  Workaround for 100vh not working on iOS Safari.
+  Copied from https://www.npmjs.com/package/@rvxlab/tailwind-plugin-ios-full-height.
+*/
+@supports (-webkit-touch-callout: none) {
+  #app {
+    min-height: -webkit-fill-available;
+  }
+}
+
+/*
+  WARNING: do not use 'all: revert'. In iOS Safari, for some reason this
+  prevents child elements of anchor tags from applying their own styles.
+*/
+a {
+  color: revert;
+  text-decoration: revert;
+}
+
+@tailwind components;
+
+@tailwind utilities;

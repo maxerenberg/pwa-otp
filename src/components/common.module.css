@@ -1,0 +1,27 @@
+.mainCenter {
+  flex: 1 0;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0.5rem;
+}
+
+/*
+  Flexbox gap is not supported in Safari on iOS 12.5. Use the
+  "lobotomized owl selector" as a workaround.
+*/
+.mainCenter > * + * {
+  margin-top: 1.5rem;
+}
+
+/* Copied from https://webaim.org/techniques/css/invisiblecontent/ */
+.srOnly {
+  position: absolute;
+  left: -10000px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
