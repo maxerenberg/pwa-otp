@@ -29,3 +29,10 @@ export function getNormalizedPath(): string {
   }
   return path;
 }
+
+export function redirectTo(href: string) {
+  if (href.charAt(0) === "/") {
+    href = base + href;
+  }
+  history.pushState(null, "", href);
+}

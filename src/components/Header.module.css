@@ -6,3 +6,16 @@
   position: relative;
   top: -1px;
 }
+
+.icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  color: white;
+}
+
+@media (min-width: 768px) {
+  .icon {
+    width: 2rem;
+    height: 2rem;
+  }
+}

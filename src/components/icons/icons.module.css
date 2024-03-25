@@ -1,0 +1,17 @@
+/*
+  We cannot use Svelte's scoped CSS because the class name is injected
+  after the ones in the class prop, preventing other components from
+  overriding the scoped rules
+*/
+
+.svg {
+  width: 1.5rem;
+  height: 1.5rem;
+  color: rgb(31 41 55);
+}
+
+@media (prefers-color-scheme: dark) {
+  .svg {
+    color: white;
+  }
+}

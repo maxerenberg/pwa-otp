@@ -8,16 +8,19 @@
   import SidebarGroup from "flowbite-svelte/SidebarGroup.svelte";
   import SidebarItem from "flowbite-svelte/SidebarItem.svelte";
   import SidebarWrapper from "flowbite-svelte/SidebarWrapper.svelte";
-  import BarsSolid from "flowbite-svelte-icons/BarsSolid.svelte";
-  import CogOutline from "flowbite-svelte-icons/CogOutline.svelte";
-  import EyeSlashOutline from "flowbite-svelte-icons/EyeSlashOutline.svelte";
-  import MessagesOutline from "flowbite-svelte-icons/MessagesOutline.svelte";
-  import PlusSolid from "flowbite-svelte-icons/PlusSolid.svelte";
-  import QuestionCircleOutline from "flowbite-svelte-icons/QuestionCircleOutline.svelte";
-  import UserEditOutline from "flowbite-svelte-icons/UserEditOutline.svelte";
+  import AngleLeft from "./icons/AngleLeft.svelte";
+  import BarsSolid from "./icons/BarsSolid.svelte";
+  import CogOutline from "./icons/CogOutline.svelte";
+  import EyeSlashOutline from "./icons/EyeSlashOutline.svelte";
+  import MessagesOutline from "./icons/MessagesOutline.svelte";
+  import PlusSolid from "./icons/PlusSolid.svelte";
+  import QuestionCircleOutline from "./icons/QuestionCircleOutline.svelte";
+  import UserEditOutline from "./icons/UserEditOutline.svelte";
+  import Link from "./Link.svelte";
   import styles from "./Header.module.css";
 
   export let title: string;
+  export let backHref: string | undefined = undefined;
 
   // TODO: use a non-drawer sidebar on desktop
   let hideDrawer = true;
@@ -85,14 +88,22 @@
 </svelte:head>
 
 <header class="flex items-center bg-primary-700 px-3 py-2 md:px-4">
-  <button
-    class="rounded-lg p-1 hover:bg-primary-600"
-    aria-label="Toggle navigation"
-    aria-controls="navDrawer"
-    on:click={onClickMenuButton}
-  >
-    <BarsSolid class="h-6 w-6 text-white md:h-8 md:w-8" />
-  </button>
+  {#if backHref}
+    <Link href={backHref}>
+      <button class="rounded-lg p-1 hover:bg-primary-600" aria-label="Back">
+        <AngleLeft class={styles.icon} />
+      </button>
+    </Link>
+  {:else}
+    <button
+      class="rounded-lg p-1 hover:bg-primary-600"
+      aria-label="Toggle navigation"
+      aria-controls="navDrawer"
+      on:click={onClickMenuButton}
+    >
+      <BarsSolid class={styles.icon} />
+    </button>
+  {/if}
   <Heading
     tag="h1"
     color="text-white"
@@ -102,7 +113,7 @@
   </Heading>
   <!-- TODO: only show if on 'Accounts' page and setup was completed -->
   <button class="rounded-lg p-1 hover:bg-primary-600" aria-label="Add account">
-    <PlusSolid class="h-6 w-6 text-white md:h-8 md:w-8" />
+    <PlusSolid class={styles.icon} />
   </button>
 </header>
 <Drawer
@@ -110,7 +121,7 @@
   {transitionParams}
   bind:hidden={hideDrawer}
   id="navDrawer"
-  width="w-max"
+  width=""
   divClass="overflow-y-auto z-50 p-4 pe-6 bg-white"
   aria-label="Navigation"
   aria-modal="true"

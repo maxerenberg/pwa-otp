@@ -2,16 +2,25 @@
   import Button from "flowbite-svelte/Button.svelte";
   import Header from "../Header.svelte";
   import commonStyles from "../common.module.css";
+  import { settings, type EncryptionMethod } from "../../lib/userSettings";
+  import { redirectTo } from "../../lib/routing";
 
-  let encryptionMethod: "password" | "fido2" | "none" = "password";
+  let encryptionMethod: EncryptionMethod = "password";
 
   function onSubmit(ev: SubmitEvent) {
     ev.preventDefault();
-    console.log(ev);
+    // TODO: support password encryption
+    // TODO: support FIDO2 encryption
+    if (encryptionMethod === "none") {
+      settings.create(encryptionMethod);
+      redirectTo("/");
+    } else {
+      console.error(`${encryptionMethod} is not supported yet`);
+    }
   }
 </script>
 
-<Header title="Setup security" />
+<Header title="Setup security" backHref="/" />
 
 <main class={commonStyles.mainCenter}>
   <p>
@@ -47,8 +56,8 @@
     align-items: flex-start;
   }
   /* Flexbox gap is not supported in Safari on iOS 12.5 */
-  label:not(:nth-child(1)) {
-    margin-top: 4px;
+  label:not(:nth-of-type(1)) {
+    margin-top: 0.75rem;
   }
   input[type="radio"] {
     margin-right: 0.5rem;
