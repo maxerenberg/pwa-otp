@@ -1,21 +1,97 @@
-.sidebar a {
-  text-decoration: none;
+.header {
+  display: flex;
+  align-items: center;
+  background-color: var(--primary-700);
+  padding: 0.5rem 0.75rem;
 }
 
-.sidebar a > span {
+@media (min-width: 768px) {
+  .header {
+    padding: 0.5rem 1rem;
+  }
+}
+
+.headingButton {
+  border-radius: 0.5rem;
+  padding: 0.25rem;
+}
+
+.headingButton:hover {
+  background-color: var(--primary-600);
+}
+
+.heading {
+  color: white;
+  font-weight: bold;
+  flex-grow: 1;
   position: relative;
   top: -1px;
+  margin-left: 0.5rem;
+  font-size: 1.25rem;
+  line-height: 1.75rem;
 }
 
-.icon {
+@media (min-width: 768px) {
+  .heading {
+    margin-left: 1rem;
+    font-size: 1.875rem;
+    line-height: 2.25rem;
+  }
+}
+
+.headingIcon {
   width: 1.5rem;
   height: 1.5rem;
   color: white;
 }
 
 @media (min-width: 768px) {
-  .icon {
+  .headingIcon {
     width: 2rem;
     height: 2rem;
   }
+}
+
+.drawer {
+  overflow-y: auto;
+  z-index: 50;
+  padding: 1rem 0.25rem;
+  width: 70%;
+  background-color: white;
+}
+
+@media (prefers-color-scheme: dark) {
+  .drawer {
+    background-color: #1b1b1b;
+    border-right: 1px solid #ccc;
+  }
+}
+
+.navList > li {
+  border-radius: 0.5rem;
+}
+
+.navList > li:is(:hover, :active) {
+  background-color: #ccc;
+}
+
+@media (prefers-color-scheme: dark) {
+  .navList > li:is(:hover, :active) {
+    background-color: #313131;
+  }
+}
+
+.navList a {
+  text-decoration-color: currentcolor;
+  display: flex;
+  padding: 0.75rem;
+}
+
+.navList a > svg {
+  margin-right: 0.75rem;
+}
+
+.navList a > span {
+  position: relative;
+  top: -1px;
 }

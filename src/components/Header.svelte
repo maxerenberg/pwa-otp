@@ -3,11 +3,7 @@
   import { tick } from "svelte";
   import { sineIn } from "svelte/easing";
   import Drawer from "flowbite-svelte/Drawer.svelte";
-  import Heading from "flowbite-svelte/Heading.svelte";
-  import Sidebar from "flowbite-svelte/Sidebar.svelte";
-  import SidebarGroup from "flowbite-svelte/SidebarGroup.svelte";
-  import SidebarItem from "flowbite-svelte/SidebarItem.svelte";
-  import SidebarWrapper from "flowbite-svelte/SidebarWrapper.svelte";
+
   import AngleLeft from "./icons/AngleLeft.svelte";
   import BarsSolid from "./icons/BarsSolid.svelte";
   import CogOutline from "./icons/CogOutline.svelte";
@@ -17,6 +13,7 @@
   import QuestionCircleOutline from "./icons/QuestionCircleOutline.svelte";
   import UserEditOutline from "./icons/UserEditOutline.svelte";
   import Link from "./Link.svelte";
+  import NavListItem from "./NavListItem.svelte";
   import styles from "./Header.module.css";
 
   export let title: string;
@@ -87,76 +84,67 @@
   <title>{title}</title>
 </svelte:head>
 
-<header class="flex items-center bg-primary-700 px-3 py-2 md:px-4">
+<header class={styles.header}>
   {#if backHref}
     <Link href={backHref}>
-      <button class="rounded-lg p-1 hover:bg-primary-600" aria-label="Back">
-        <AngleLeft class={styles.icon} />
+      <button class={styles.headingButton} aria-label="Back">
+        <AngleLeft class={styles.headingIcon} />
       </button>
     </Link>
   {:else}
     <button
-      class="rounded-lg p-1 hover:bg-primary-600"
+      class={styles.headingButton}
       aria-label="Toggle navigation"
       aria-controls="navDrawer"
       on:click={onClickMenuButton}
     >
-      <BarsSolid class={styles.icon} />
+      <BarsSolid class={styles.headingIcon} />
     </button>
   {/if}
-  <Heading
-    tag="h1"
-    color="text-white"
-    class="relative top-[-1px] ml-2 text-xl font-bold md:ml-4 md:text-3xl"
-  >
+  <h1 class={styles.heading}>
     {title}
-  </Heading>
+  </h1>
   <!-- TODO: only show if on 'Accounts' page and setup was completed -->
-  <button class="rounded-lg p-1 hover:bg-primary-600" aria-label="Add account">
-    <PlusSolid class={styles.icon} />
+  <button class={styles.headingButton} aria-label="Add account">
+    <PlusSolid class={styles.headingIcon} />
   </button>
 </header>
+
 <Drawer
   transitionType="fly"
   {transitionParams}
   bind:hidden={hideDrawer}
   id="navDrawer"
   width=""
-  divClass="overflow-y-auto z-50 p-4 pe-6 bg-white"
+  divClass={styles.drawer}
   aria-label="Navigation"
   aria-modal="true"
   role="dialog"
 >
   <!-- TODO: activeUrl -->
-  <Sidebar asideClass={styles.sidebar}>
-    <SidebarWrapper divClass="">
-      <SidebarGroup>
-        <SidebarItem label="Rearrange accounts">
-          <svelte:fragment slot="icon">
-            <UserEditOutline />
-          </svelte:fragment>
-        </SidebarItem>
-        <SidebarItem label="Hide codes">
-          <svelte:fragment slot="icon">
-            <EyeSlashOutline />
-          </svelte:fragment>
-        </SidebarItem>
-        <SidebarItem label="Settings">
-          <svelte:fragment slot="icon">
-            <CogOutline />
-          </svelte:fragment>
-        </SidebarItem>
-        <SidebarItem label="Help">
-          <svelte:fragment slot="icon">
-            <QuestionCircleOutline />
-          </svelte:fragment>
-        </SidebarItem>
-        <SidebarItem label="Feedback">
-          <svelte:fragment slot="icon">
-            <MessagesOutline />
-          </svelte:fragment>
-        </SidebarItem>
-      </SidebarGroup>
-    </SidebarWrapper>
-  </Sidebar>
+  <!-- TODO: add real links -->
+  <aside aria-label="Sidebar">
+    <ul role="list" class={styles.navList}>
+      <NavListItem href="#">
+        <UserEditOutline />
+        <span>Rearrange accounts</span>
+      </NavListItem>
+      <NavListItem href="#">
+        <EyeSlashOutline />
+        <span>Hide codes</span>
+      </NavListItem>
+      <NavListItem href="#">
+        <CogOutline />
+        <span>Settings</span>
+      </NavListItem>
+      <NavListItem href="#">
+        <QuestionCircleOutline />
+        <span>Help</span>
+      </NavListItem>
+      <NavListItem href="#">
+        <MessagesOutline />
+        <span>Feedback</span>
+      </NavListItem>
+    </ul>
+  </aside>
 </Drawer>
