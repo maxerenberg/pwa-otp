@@ -1,9 +1,10 @@
 <script lang="ts">
-  import Button from "flowbite-svelte/Button.svelte";
-  import Header from "../Header.svelte";
-  import commonStyles from "../common.module.css";
-  import { settings, type EncryptionMethod } from "../../lib/userSettings";
-  import { redirectTo } from "../../lib/routing";
+  import Button from "./Button.svelte";
+  import Header from "./Header.svelte";
+  import commonStyles from "./common.module.css";
+  import { settings, type EncryptionMethod } from "../lib/userSettings";
+  import { redirectTo } from "../lib/routing";
+  import styles from "./SetupSecurity.module.css";
 
   let encryptionMethod: EncryptionMethod = "password";
 
@@ -30,36 +31,20 @@
       >localStorage</a
     >. How would you like to encrypt these secrets?
   </p>
-  <form on:submit={onSubmit}>
+  <form on:submit={onSubmit} class={styles.form}>
     <fieldset>
       <legend class={commonStyles.srOnly}>Password encryption method</legend>
       <label>
         <input type="radio" value="password" bind:group={encryptionMethod} /> Password
       </label>
       <label>
-        <input type="radio" value="fido2" bind:group={encryptionMethod} /> FIDO2
+        <input type="radio" value="fido2" bind:group={encryptionMethod} /> WebAuthn
+        PRF
       </label>
       <label>
         <input type="radio" value="none" bind:group={encryptionMethod} /> No encryption
       </label>
     </fieldset>
-    <Button color="primary" class="mt-8 text-lg font-bold" type="submit"
-      >Continue</Button
-    >
+    <Button class={commonStyles.largeBoldButton} type="submit">Continue</Button>
   </form>
 </main>
-
-<style>
-  fieldset {
-    display: flex;
-    flex-flow: column nowrap;
-    align-items: flex-start;
-  }
-  /* Flexbox gap is not supported in Safari on iOS 12.5 */
-  label:not(:nth-of-type(1)) {
-    margin-top: 0.75rem;
-  }
-  input[type="radio"] {
-    margin-right: 0.5rem;
-  }
-</style>

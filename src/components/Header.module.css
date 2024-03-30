@@ -14,10 +14,11 @@
 .headingButton {
   border-radius: 0.5rem;
   padding: 0.25rem;
+  color: white;
 }
 
-.headingButton:hover {
-  background-color: var(--primary-600);
+.headingButton:active {
+  opacity: 50%;
 }
 
 .heading {
@@ -42,7 +43,6 @@
 .headingIcon {
   width: 1.5rem;
   height: 1.5rem;
-  color: white;
 }
 
 @media (min-width: 768px) {
@@ -89,9 +89,16 @@
 
 .navList a > svg {
   margin-right: 0.75rem;
+  color: rgb(31 41 55);
 }
 
 .navList a > span {
   position: relative;
   top: -1px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .navList a > svg {
+    color: white;
+  }
 }

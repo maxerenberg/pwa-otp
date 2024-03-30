@@ -1,0 +1,18 @@
+.form fieldset {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: flex-start;
+}
+
+/* Flexbox gap is not supported in Safari on iOS 12.5 */
+.form label:not(:nth-of-type(1)) {
+  margin-top: 1rem;
+}
+
+.form input[type="radio"] {
+  margin-right: 0.5rem;
+}
+
+.form button[type="submit"] {
+  margin-top: 2rem;
+}

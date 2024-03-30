@@ -2,7 +2,7 @@
   import { onMount, type ComponentType } from "svelte";
   import { getNormalizedPath } from "../lib/routing";
   import Home from "./Home.svelte";
-  import SetupSecurity from "./setup/Security.svelte";
+  import SetupSecurity from "./SetupSecurity.svelte";
   import PageNotFound from "./PageNotFound.svelte";
 
   const routes: Record<string, ComponentType> = {

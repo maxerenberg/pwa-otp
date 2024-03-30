@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Button from "flowbite-svelte/Button.svelte";
+  import Button from "./Button.svelte";
   import Link from "./Link.svelte";
   import commonStyles from "./common.module.css";
 </script>
@@ -16,7 +16,7 @@
   <!-- TODO: recommend user to install PWA. On iOS, make this mandatory. -->
   <!-- TODO: prompt user to import settings JSON file -->
   <Link href="/#/setup/security">
-    <Button color="primary" class="text-lg font-bold">Get started</Button>
+    <Button class={commonStyles.largeBoldButton}>Get started</Button>
   </Link>
 </main>
 
