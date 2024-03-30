@@ -1,0 +1,42 @@
+/* Adapted from https://melt-ui.com/docs/builders/dialog#drawer */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background-color: rgba(0 0 0 / 50%);
+}
+
+.content {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 50;
+  overflow-y: auto;
+  height: 100vh;
+  width: 70%;
+  max-width: 350px;
+  background-color: white;
+  padding: 1rem 0.5rem;
+  box-shadow:
+    0 10px 15px -3px rgb(0 0 0 / 0.1),
+    0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+/* 100vh doesn't work as expected in iOS Safari */
+@supports (-webkit-touch-callout: none) {
+  .content {
+    height: -webkit-fill-available;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .content {
+    background-color: #1b1b1b;
+    border-right: 1px solid rgba(180 180 180 / 50%);
+  }
+}
+
+.content:focus {
+  outline: none;
+}

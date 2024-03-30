@@ -1,9 +1,6 @@
 <script lang="ts">
-  import type { ComponentProps } from "svelte";
-  import { tick } from "svelte";
-  import { sineIn } from "svelte/easing";
-  import Drawer from "flowbite-svelte/Drawer.svelte";
-
+  import { Dialog } from "bits-ui";
+  import Drawer from "./Drawer.svelte";
   import AngleLeft from "./icons/AngleLeft.svelte";
   import BarsSolid from "./icons/BarsSolid.svelte";
   import CogOutline from "./icons/CogOutline.svelte";
@@ -14,69 +11,16 @@
   import UserEditOutline from "./icons/UserEditOutline.svelte";
   import Link from "./Link.svelte";
   import NavListItem from "./NavListItem.svelte";
+  import commonStyles from "./common.module.css";
   import styles from "./Header.module.css";
 
   export let title: string;
   export let backHref: string | undefined = undefined;
 
   // TODO: use a non-drawer sidebar on desktop
-  let hideDrawer = true;
-  const transitionParams: ComponentProps<Drawer>["transitionParams"] = {
-    x: -320,
-    duration: 200,
-    easing: sineIn,
-  };
-
-  // Adapted from https://learn.svelte.dev/tutorial/actions
-  function getFocusable(node: HTMLElement) {
-    return node.querySelectorAll<HTMLElement>(
-      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
-    );
-  }
-
-  function menuOnKeydown(ev: KeyboardEvent) {
-    if (ev.key === "Escape") {
-      // Close menu if user presses Esc
-      hideDrawer = true;
-    } else if (ev.key == "Tab" && drawer) {
-      // Only allow elements in drawer to be focused
-      const focusables = getFocusable(drawer);
-      if (focusables.length === 0) return;
-      const first = focusables.item(0);
-      const last = focusables.item(focusables.length - 1);
-      const current = document.activeElement as HTMLElement | null;
-      if (ev.shiftKey && current === first) {
-        ev.preventDefault();
-        last.focus();
-      } else if (!ev.shiftKey && current === last) {
-        ev.preventDefault();
-        first.focus();
-      }
-    }
-  }
-  // The Drawer component doesn't allow us to pass on:keydown
-  // (it does pass {...$$restProps} to the div, but that doesn't seem to work
-  // for event handlers). As a workaround, we call getElementById after the
-  // div has mounted, then attach an event handler to it.
-  let drawer: HTMLElement | null = null;
-  let prevFocusedElem: HTMLElement | null = null;
-  async function onClickMenuButton() {
-    hideDrawer = false;
-    await tick();
-    prevFocusedElem = document.activeElement as HTMLElement | null;
-    drawer = document.getElementById("navDrawer");
-    if (drawer) {
-      drawer.addEventListener("keydown", menuOnKeydown);
-      getFocusable(drawer)[0]?.focus();
-    }
-  }
-  $: if (hideDrawer && drawer) {
-    drawer.removeEventListener("keydown", menuOnKeydown);
-    drawer = null;
-    if (prevFocusedElem) {
-      prevFocusedElem.focus();
-      prevFocusedElem = null;
-    }
+  let drawerOpen = false;
+  function onClickMenuButton() {
+    drawerOpen = true;
   }
 </script>
 
@@ -95,7 +39,8 @@
     <button
       class={styles.headingButton}
       aria-label="Toggle navigation"
-      aria-controls="navDrawer"
+      aria-haspopup="dialog"
+      aria-expanded={drawerOpen}
       on:click={onClickMenuButton}
     >
       <BarsSolid class={styles.headingIcon} />
@@ -110,20 +55,11 @@
   </button>
 </header>
 
-<Drawer
-  transitionType="fly"
-  {transitionParams}
-  bind:hidden={hideDrawer}
-  id="navDrawer"
-  width=""
-  divClass={styles.drawer}
-  aria-label="Navigation"
-  aria-modal="true"
-  role="dialog"
->
-  <!-- TODO: activeUrl -->
-  <!-- TODO: add real links -->
+<Drawer bind:open={drawerOpen}>
+  <Dialog.Title class={commonStyles.srOnly}>Navigation</Dialog.Title>
   <aside aria-label="Sidebar">
+    <!-- TODO: activeUrl -->
+    <!-- TODO: add real links -->
     <ul role="list" class={styles.navList}>
       <NavListItem href="#">
         <UserEditOutline />

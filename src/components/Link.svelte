@@ -2,7 +2,7 @@
   import { base } from "../lib/routing";
 
   export let href = "#";
-  let className: string | undefined = undefined;
+  let className = "";
   export { className as class };
 
   function calculateHrefWithBase(href: string): string {

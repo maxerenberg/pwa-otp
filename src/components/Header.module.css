@@ -52,21 +52,6 @@
   }
 }
 
-.drawer {
-  overflow-y: auto;
-  z-index: 50;
-  padding: 1rem 0.25rem;
-  width: 70%;
-  background-color: white;
-}
-
-@media (prefers-color-scheme: dark) {
-  .drawer {
-    background-color: #1b1b1b;
-    border-right: 1px solid #ccc;
-  }
-}
-
 .navList > li {
   border-radius: 0.5rem;
 }
