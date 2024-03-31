@@ -1,6 +1,34 @@
 /* Write your global styles here, in PostCSS syntax */
 
-@tailwind base;
+@import "./reset.css";
+@import "sanitize.css";
+@import "sanitize.css/assets.css";
+@import "sanitize.css/forms.css";
+
+/*
+  Copied from Tailwind's preflight. This prevents extra space from being
+  added to the bottom of images. See https://stackoverflow.com/a/5804278.
+*/
+img,
+svg,
+video,
+canvas,
+audio,
+iframe,
+embed,
+object {
+  display: block;
+  vertical-align: middle;
+}
+
+button {
+  cursor: pointer;
+  margin: 0;
+}
+
+p {
+  line-height: 1.25em;
+}
 
 :root {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, Roboto,
@@ -43,17 +71,10 @@
 }
 
 /*
-  WARNING: do not use 'all: revert'. In iOS Safari, for some reason this
-  prevents child elements of anchor tags from applying their own styles.
+  Note: on iOS Safari, text-decoration does not seem to work if the selector
+  is on a <button>. The selector needs to be applied to the <a> directly.
 */
-a {
-  text-decoration-color: revert;
+.text-decoration-none {
+  /* text-decoration-line: none does not work in iOS Safari 12.5 */
+  text-decoration: none;
 }
-
-a > button {
-  text-decoration-line: none;
-}
-
-@tailwind components;
-
-@tailwind utilities;

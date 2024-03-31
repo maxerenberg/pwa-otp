@@ -22,6 +22,10 @@
   function onClickMenuButton() {
     drawerOpen = true;
   }
+
+  // This is necessary to trigger :active on iOS Safari.
+  // See https://stackoverflow.com/a/33681490.
+  function onTouchStart() {}
 </script>
 
 <svelte:head>
@@ -31,7 +35,11 @@
 <header class={styles.header}>
   {#if backHref}
     <Link href={backHref}>
-      <button class={styles.headingButton} aria-label="Back">
+      <button
+        class={styles.headingButton}
+        aria-label="Back"
+        on:touchstart={onTouchStart}
+      >
         <AngleLeft class={styles.headingIcon} />
       </button>
     </Link>
@@ -42,6 +50,7 @@
       aria-haspopup="dialog"
       aria-expanded={drawerOpen}
       on:click={onClickMenuButton}
+      on:touchstart={onTouchStart}
     >
       <BarsSolid class={styles.headingIcon} />
     </button>

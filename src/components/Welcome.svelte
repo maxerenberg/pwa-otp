@@ -15,7 +15,7 @@
   </p>
   <!-- TODO: recommend user to install PWA. On iOS, make this mandatory. -->
   <!-- TODO: prompt user to import settings JSON file -->
-  <Link href="/#/setup/security">
+  <Link href="/#/setup/security" class="text-decoration-none">
     <Button class={commonStyles.largeBoldButton}>Get started</Button>
   </Link>
 </main>

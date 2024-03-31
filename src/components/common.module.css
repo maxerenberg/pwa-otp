@@ -13,7 +13,7 @@
   "lobotomized owl selector" as a workaround.
 */
 .mainCenter > * + * {
-  margin-top: 1.5rem;
+  margin-top: 2rem;
 }
 
 /* Copied from https://webaim.org/techniques/css/invisiblecontent/ */
