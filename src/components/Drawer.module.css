@@ -21,22 +21,18 @@
   box-shadow:
     0 10px 15px -3px rgb(0 0 0 / 0.1),
     0 4px 6px -4px rgb(0 0 0 / 0.1);
-}
 
-/* 100vh doesn't work as expected in iOS Safari */
-@supports (-webkit-touch-callout: none) {
-  .content {
+  &:focus {
+    outline: none;
+  }
+
+  /* 100vh doesn't work as expected in iOS Safari */
+  @supports (-webkit-touch-callout: none) {
     height: -webkit-fill-available;
   }
-}
 
-@media (prefers-color-scheme: dark) {
-  .content {
+  @media (prefers-color-scheme: dark) {
     background-color: #1b1b1b;
     border-right: 1px solid rgba(180 180 180 / 50%);
   }
-}
-
-.content:focus {
-  outline: none;
 }

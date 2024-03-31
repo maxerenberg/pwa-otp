@@ -8,18 +8,16 @@
   color: white;
   background-color: var(--primary-700);
   border-radius: 0.5rem;
-}
 
-.button:hover {
-  background-color: var(--primary-800);
-}
-
-@media (prefers-color-scheme: dark) {
-  .button {
-    background-color: var(--primary-600);
+  &:hover {
+    background-color: var(--primary-800);
   }
 
-  .button:hover {
-    background-color: var(--primary-700);
+  @media (prefers-color-scheme: dark) {
+    background-color: var(--primary-600);
+
+    &:hover {
+      background-color: var(--primary-700);
+    }
   }
 }
