@@ -17,7 +17,8 @@
   <path
     stroke="currentColor"
     stroke-linecap="round"
-    stroke-width="3"
-    d="M2 5h17M2 12h17M2 19h17"
+    stroke-linejoin="round"
+    stroke-width="2"
+    d="m9 5 7 7-7 7"
   />
 </svg>

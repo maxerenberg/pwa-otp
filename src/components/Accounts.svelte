@@ -1,5 +1,6 @@
 <script lang="ts">
   import Button from "./Button.svelte";
+  import Header from "./Header.svelte";
   import type { TOTPAccount } from "../lib/totp";
   import commonStyles from "./common.module.css";
   import UserAddOutline from "./icons/UserAddOutline.svelte";
@@ -7,6 +8,8 @@
 
   export let accounts: TOTPAccount[];
 </script>
+
+<Header title="Authenticator" isAccountsPage />
 
 <main class={commonStyles.mainCenter}>
   <p>You don't have any accounts yet.</p>

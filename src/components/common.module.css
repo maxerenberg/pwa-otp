@@ -16,6 +16,13 @@
   margin-top: 2rem;
 }
 
+.appMain {
+  background-color: var(--app-main-bg);
+  flex: 1 0;
+  display: flex;
+  flex-flow: column nowrap;
+}
+
 /* Copied from https://webaim.org/techniques/css/invisiblecontent/ */
 .srOnly {
   position: absolute;

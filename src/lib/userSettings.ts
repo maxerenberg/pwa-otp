@@ -1,4 +1,4 @@
-import { writable } from "svelte/store";
+import { derived, writable } from "svelte/store";
 import {
   ParseError,
   parseOTPAuthURL,
@@ -113,3 +113,8 @@ function createSettingsStore() {
 }
 
 export const settings = createSettingsStore();
+
+export const settingsExist = derived(
+  settings,
+  ($settings) => $settings !== null,
+);

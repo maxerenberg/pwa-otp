@@ -1,5 +1,7 @@
 <script lang="ts">
-  import { Dialog } from "bits-ui";
+  // See https://vitejs.dev/guide/performance#avoid-barrel-files
+  //import { Dialog } from "bits-ui";
+  import * as Dialog from "../../node_modules/bits-ui/dist/bits/dialog";
   import Drawer from "./Drawer.svelte";
   import AngleLeft from "./icons/AngleLeft.svelte";
   import BarsSolid from "./icons/BarsSolid.svelte";
@@ -16,6 +18,8 @@
 
   export let title: string;
   export let backHref: string | undefined = undefined;
+  export let isAccountsPage = false;
+  export let centerTitle = false;
 
   // TODO: use a non-drawer sidebar on desktop
   let drawerOpen = false;
@@ -32,9 +36,9 @@
   <title>{title}</title>
 </svelte:head>
 
-<header class={styles.header}>
+<header class={`${styles.header} ${centerTitle ? styles.centerTitle : ""}`}>
   {#if backHref}
-    <Link href={backHref}>
+    <Link href={backHref} class={styles.backLink}>
       <button
         class={styles.headingButton}
         aria-label="Back"
@@ -58,10 +62,11 @@
   <h1 class={styles.heading}>
     {title}
   </h1>
-  <!-- TODO: only show if on 'Accounts' page and setup was completed -->
-  <button class={styles.headingButton} aria-label="Add account">
-    <PlusSolid class={styles.headingIcon} />
-  </button>
+  {#if isAccountsPage}
+    <button class={styles.headingButton} aria-label="Add account">
+      <PlusSolid class={styles.headingIcon} />
+    </button>
+  {/if}
 </header>
 
 <Drawer bind:open={drawerOpen}>
@@ -78,7 +83,7 @@
         <EyeSlashOutline />
         <span>Hide codes</span>
       </NavListItem>
-      <NavListItem href="#">
+      <NavListItem href="/#/settings">
         <CogOutline />
         <span>Settings</span>
       </NavListItem>

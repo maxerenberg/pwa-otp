@@ -1,8 +1,11 @@
 <script lang="ts">
   import Button from "./Button.svelte";
+  import Header from "./Header.svelte";
   import Link from "./Link.svelte";
   import commonStyles from "./common.module.css";
 </script>
+
+<Header title="Authenticator" />
 
 <main class={commonStyles.mainCenter}>
   <h2>Welcome to Authenticator!</h2>

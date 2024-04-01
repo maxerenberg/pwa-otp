@@ -4,10 +4,14 @@
   import Home from "./Home.svelte";
   import SetupSecurity from "./SetupSecurity.svelte";
   import PageNotFound from "./PageNotFound.svelte";
+  import Settings from "./Settings.svelte";
+  import DeleteAccount from "./DeleteAccount.svelte";
 
   const routes: Record<string, ComponentType> = {
     "/": Home,
     "/#/setup/security": SetupSecurity,
+    "/#/settings": Settings,
+    "/#/settings/delete-account": DeleteAccount,
   };
 
   onMount(() => {

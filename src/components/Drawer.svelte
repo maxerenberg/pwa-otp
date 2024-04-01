@@ -1,5 +1,7 @@
 <script lang="ts">
-  import { Dialog } from "bits-ui";
+  // See https://vitejs.dev/guide/performance#avoid-barrel-files
+  //import { Dialog } from "bits-ui";
+  import * as Dialog from "../../node_modules/bits-ui/dist/bits/dialog";
   import { fade, fly } from "svelte/transition";
   import styles from "./Drawer.module.css";
   export let contentClass = "";

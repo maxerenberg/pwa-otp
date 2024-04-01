@@ -6,18 +6,10 @@
   padding: 0.625rem 1.25rem;
   border: none;
   color: white;
-  background-color: var(--primary-700);
+  background-color: var(--bg);
   border-radius: 0.5rem;
 
   &:hover {
-    background-color: var(--primary-800);
-  }
-
-  @media (prefers-color-scheme: dark) {
-    background-color: var(--primary-600);
-
-    &:hover {
-      background-color: var(--primary-700);
-    }
+    background-color: var(--hover-bg);
   }
 }

@@ -1,0 +1,26 @@
+.section {
+  margin-top: 1rem;
+}
+
+.sectionTitle {
+  color: var(--app-section-title-color);
+  padding: 0.5rem 1rem;
+}
+
+.sectionList {
+  background-color: var(--app-section-bg);
+  border-top: var(--app-section-border);
+  border-bottom: var(--app-section-border);
+
+  > li > a {
+    color: currentcolor;
+    padding: 0.5rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    svg {
+      color: var(--app-section-icon-color);
+    }
+  }
+}
