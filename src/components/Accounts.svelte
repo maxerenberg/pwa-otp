@@ -12,9 +12,19 @@
 <Header title="Authenticator" isAccountsPage />
 
 <main class={commonStyles.mainCenter}>
-  <p>You don't have any accounts yet.</p>
-  <UserAddOutline class={styles.addUserIcon} />
-  <Button class={`${commonStyles.largeBoldButton} ${styles.addUserButton}`}>
-    Add account
-  </Button>
+  {#if accounts.length === 0}
+    <p>You don't have any accounts yet.</p>
+    <UserAddOutline class={styles.addUserIcon} />
+    <Button class={`${commonStyles.largeBoldButton} ${styles.addUserButton}`}>
+      Add account
+    </Button>
+  {:else}
+    <ul>
+      {#each accounts as account}
+        <li>
+          {account.name}
+        </li>
+      {/each}
+    </ul>
+  {/if}
 </main>

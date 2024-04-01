@@ -74,6 +74,7 @@
   <aside aria-label="Sidebar">
     <!-- TODO: activeUrl -->
     <!-- TODO: add real links -->
+    <!-- TODO: hide first three links if account is not setup -->
     <ul role="list" class={styles.navList}>
       <NavListItem href="#">
         <UserEditOutline />
