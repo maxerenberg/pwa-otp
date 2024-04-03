@@ -1,0 +1,60 @@
+.item {
+  background-color: var(--app-section-bg);
+  cursor: pointer;
+}
+
+.itemInner {
+  display: flex;
+  margin-left: 0.75rem;
+  border-bottom: var(--app-section-border);
+}
+
+.grid {
+  flex-grow: 1;
+  display: grid;
+  grid-template-columns: auto 1fr;
+}
+
+.issuerLogo {
+  margin: 0.5rem 0.75rem 0.5rem 0;
+  color: #666;
+  width: 3rem;
+  height: 3rem;
+
+  @media (prefers-color-scheme: dark) {
+    color: #ddd;
+  }
+}
+
+.issuerAndName {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+
+  > * {
+    line-height: 1.25rem;
+  }
+}
+
+.otpCode {
+  font-family: monospace;
+  font-weight: bold;
+  font-size: 1.5rem;
+  line-height: 2rem;
+  padding-bottom: 0.5rem;
+  color: var(--primary-600);
+
+  @media (prefers-color-scheme: dark) {
+    color: var(--primary-300);
+  }
+}
+
+.rightArrowContainer {
+  display: flex;
+  align-items: center;
+  margin-right: 0.5rem;
+}
+
+.rightArrow {
+  color: var(--app-section-icon-color);
+}

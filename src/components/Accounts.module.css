@@ -1,7 +1,7 @@
 .addUserIcon {
   width: 6rem;
   height: 6rem;
-  color: #444;
+  color: #555;
 
   @media (prefers-color-scheme: dark) {
     color: #bbb;

@@ -30,6 +30,16 @@ p {
   line-height: 1.25em;
 }
 
+input {
+  /* font: inherit doesn't seem to be working on iOS Safari 12.5 */
+  font-size: inherit;
+
+  &[type="text"] {
+    /* iOS Safari seems to add a rounded border */
+    border-radius: 0;
+  }
+}
+
 :root {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, Roboto,
     Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;

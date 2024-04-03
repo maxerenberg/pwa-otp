@@ -8,7 +8,7 @@
   import styles from "./Settings.module.css";
 </script>
 
-<Header title="Settings" backHref="/" centerTitle />
+<Header title="Settings" backHref="/" />
 
 {#if $settingsExist}
   <main class={commonStyles.appMain}>

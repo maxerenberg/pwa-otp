@@ -19,7 +19,6 @@
   export let title: string;
   export let backHref: string | undefined = undefined;
   export let isAccountsPage = false;
-  export let centerTitle = false;
 
   // TODO: use a non-drawer sidebar on desktop
   let drawerOpen = false;
@@ -36,7 +35,7 @@
   <title>{title}</title>
 </svelte:head>
 
-<header class={`${styles.header} ${centerTitle ? styles.centerTitle : ""}`}>
+<header class={`${styles.header} ${backHref ? styles.centerTitle : ""}`}>
   {#if backHref}
     <Link href={backHref} class={styles.backLink}>
       <button
@@ -63,9 +62,11 @@
     {title}
   </h1>
   {#if isAccountsPage}
-    <button class={styles.headingButton} aria-label="Add account">
-      <PlusSolid class={styles.headingIcon} />
-    </button>
+    <Link href="/#/add-account" class="text-decoration-none">
+      <button class={styles.headingButton} aria-label="Add account">
+        <PlusSolid class={styles.headingIcon} />
+      </button>
+    </Link>
   {/if}
 </header>
 

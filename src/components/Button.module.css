@@ -8,17 +8,26 @@
   color: white;
   border-radius: 0.5rem;
 
-  &.primary {
+  &.primary:not([disabled]) {
     background-color: var(--primary-700);
     &:hover {
       background-color: var(--primary-800);
     }
   }
 
-  &.danger {
+  &.danger:not([disabled]) {
     background-color: var(--danger);
     &:hover {
       background-color: var(--danger-hover);
+    }
+  }
+
+  &[disabled] {
+    color: #666;
+    background-color: #bbb;
+
+    @media (prefers-color-scheme: dark) {
+      background-color: #aaa;
     }
   }
 }

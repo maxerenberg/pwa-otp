@@ -57,17 +57,17 @@ export function base32encode(arr: Uint8Array): string {
   return chars.join("");
 }
 
+const hashAlgorithms = ["SHA1", "SHA256", "SHA512"] as const;
+type HashAlgorithm = (typeof hashAlgorithms)[number];
+
 export type TOTPAccount = {
   // will be encrypted unless encryptionMethod === 'none'
   secret: Uint8Array;
   name: string;
   issuer: string | undefined;
-  algorithm: "SHA1" | "SHA256" | "SHA512";
+  algorithm: HashAlgorithm;
   digits: 6 | 8;
 };
-
-const hashAlgorithms = ["SHA1", "SHA256", "SHA512"] as const;
-type HashAlgorithm = (typeof hashAlgorithms)[number];
 
 type LabelInfo = {
   issuer: string | undefined;

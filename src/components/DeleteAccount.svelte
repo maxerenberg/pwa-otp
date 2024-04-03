@@ -14,7 +14,7 @@
   }
 </script>
 
-<Header title="Delete account" backHref="/#/settings" centerTitle />
+<Header title="Delete account" backHref="/#/settings" />
 
 {#if $settings}
   <main class={commonStyles.mainCenter}>
