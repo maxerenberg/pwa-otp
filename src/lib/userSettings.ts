@@ -6,11 +6,11 @@ import {
   type TOTPAccount,
 } from "./totp";
 
-export type EncryptionMethod = "password" | "fido2" | "none";
+export type EncryptionMethod = "password" | "webauthn-prf" | "none";
 
 const SCHEMA_VERSION = 1;
 type EncodedUserSettings = {
-  version: typeof SCHEMA_VERSION;
+  version: number;
   encryptionMethod: EncryptionMethod;
   accounts: string[]; // array of otpauth:// URLs
 };
@@ -25,6 +25,8 @@ export type UserSettings = {
 
 const LOCALSTORAGE_SETTINGS_KEY = "pwa-otp-settings";
 
+// TODO: accept optional password param
+// TODO: return NeedPasswordError if encryptionMethod === 'password'
 function getStoredSettings(): UserSettings | ParseError | null {
   const settingsStr = localStorage.getItem(LOCALSTORAGE_SETTINGS_KEY);
   if (!settingsStr) {

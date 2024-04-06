@@ -24,9 +24,6 @@ export function base32decode(s: string): Uint8Array | ParseError {
       numBits -= 8;
     }
   }
-  if (numBits > 0) {
-    arr.push(value);
-  }
   return new Uint8Array(arr);
 }
 
@@ -52,22 +49,93 @@ export function base32encode(arr: Uint8Array): string {
     }
   }
   if (numBits > 0) {
-    chars.push(base32EncodeLookup[value]);
+    chars.push(base32EncodeLookup[value << (5 - numBits)]);
   }
   return chars.join("");
 }
 
 const hashAlgorithms = ["SHA1", "SHA256", "SHA512"] as const;
-type HashAlgorithm = (typeof hashAlgorithms)[number];
+export type HashAlgorithm = (typeof hashAlgorithms)[number];
+export type Digits = 6 | 8;
 
 export type TOTPAccount = {
-  // will be encrypted unless encryptionMethod === 'none'
-  secret: Uint8Array;
+  secret: Uint8Array; // unencrypted
   name: string;
-  issuer: string | undefined;
+  issuer?: string;
   algorithm: HashAlgorithm;
-  digits: 6 | 8;
+  digits: Digits;
 };
+
+/**
+ * Converts an integer into an 8-byte Uint8Array in big-endian order
+ */
+function intToBytes(x: number): Uint8Array {
+  // From https://www.ietf.org/rfc/rfc4226.txt:
+  // "8-byte counter value, the moving factor"
+  // "the Counter ... values are hashed high-order byte first"
+  const arr = new Uint8Array(8);
+  for (let i = 0; i < arr.length; i++) {
+    arr[arr.length - 1 - i] = x & 0xff;
+    // Note: we cannot use bitwise operators if either operand has more than
+    // 32 bits, otherwise the upper bits get discarded. We cannot use BigInt
+    // either because it is not supported on iOS Safari 12.5.
+    // This will still fail if the input has more than 53 bits (as an unsigned
+    // integer), since numbers are stored as 64-bit floats in Javascript. But
+    // we know that the input will always be a Unix epoch timestamp, so this
+    // should be fine.
+    x /= 256;
+  }
+  return arr;
+}
+
+export class TOTPCalculator {
+  private constructor(
+    readonly account: TOTPAccount,
+    private readonly cryptoKey: CryptoKey,
+  ) {}
+
+  static async factory(account: TOTPAccount): Promise<TOTPCalculator> {
+    const { algorithm, secret } = account;
+    const cryptoKey = await crypto.subtle.importKey(
+      "raw",
+      secret,
+      {
+        name: "HMAC",
+        // algorithm must have a hyphen, e.g. "SHA-1"
+        hash: algorithm.substring(0, 3) + "-" + algorithm.substring(3),
+      },
+      false,
+      ["sign"],
+    );
+    return new TOTPCalculator(account, cryptoKey);
+  }
+
+  /**
+   * Calculates the TOTP value for the current account and time
+   * @param unixTime time in seconds since the Unix epoch
+   */
+  async calculate(unixTime: number): Promise<number> {
+    const { digits } = this.account;
+    const interval = 30; // length of one time duration in seconds
+    // Adapted from https://en.wikipedia.org/wiki/Time-based_one-time_password#Algorithm
+    // and https://en.wikipedia.org/wiki/HMAC-based_one-time_password#Algorithm
+    // and https://github.com/bellstrand/totp-generator/blob/master/src/index.ts
+    const counter = Math.floor(unixTime / interval);
+    const MAC = new Uint8Array(
+      await crypto.subtle.sign("HMAC", this.cryptoKey, intToBytes(counter)),
+    );
+    // Take the least significant 4 bits (HOTP values are treated as big-endian)
+    const i = MAC[MAC.length - 1] & 0xf;
+    // Select the least signicant 31 bits from MAC[i:i+4]
+    const truncated =
+      ((MAC[i] & 0x7f) << 24) +
+      (MAC[i + 1] << 16) +
+      (MAC[i + 2] << 8) +
+      MAC[i + 3];
+    // Modulo 10^d
+    return truncated % Math.pow(10, digits);
+  }
+}
 
 type LabelInfo = {
   issuer: string | undefined;
@@ -89,10 +157,9 @@ function parseLabel(label: string): LabelInfo {
 }
 
 // See https://github.com/google/google-authenticator/wiki/Key-Uri-Format
+// TODO: accept optional decryption key
 export function parseOTPAuthURL(urlStr: string): TOTPAccount | ParseError {
-  // Safari on iOS 12.5 does not support the URL constructor, so we need
-  // the 'window' prefix
-  const url = new window.URL(urlStr);
+  const url = new URL(urlStr);
   if (url.protocol !== "otpauth:") {
     return new ParseError(
       `Expected protocol to be 'otpauth:', got '${url.protocol}'`,
@@ -129,6 +196,7 @@ export function parseOTPAuthURL(urlStr: string): TOTPAccount | ParseError {
   };
 }
 
+// TODO: accept optional encryption key
 export function serializeTOTPAccountToURL(account: TOTPAccount): string {
   let label: string;
   if (account.issuer) {
@@ -139,7 +207,7 @@ export function serializeTOTPAccountToURL(account: TOTPAccount): string {
   } else {
     label = encodeURIComponent(account.name);
   }
-  let url = new window.URL("otpauth://totp/" + label);
+  let url = new URL("otpauth://totp/" + label);
   // TODO: encrypt secret with password if user has one
   url.searchParams.append("secret", base32encode(account.secret));
   if (account.issuer) {

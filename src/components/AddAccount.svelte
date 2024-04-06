@@ -56,11 +56,7 @@
           <input type="radio" value="8" bind:group={numDigitsStr} /> 8
         </label>
       </fieldset>
-      <Button
-        type="submit"
-        disabled={!valid}
-        class={commonStyles.largeBoldButton}>Finish</Button
-      >
+      <Button type="submit" disabled={!valid}>Finish</Button>
     </form>
   </main>
 {:else}

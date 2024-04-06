@@ -40,7 +40,13 @@
 }
 
 .form button[type="submit"] {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
   margin-top: 2rem;
   width: 100%;
   border-radius: 0;
+
+  &:not([disabled]) {
+    font-weight: bold;
+  }
 }

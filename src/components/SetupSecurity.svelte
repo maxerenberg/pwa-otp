@@ -38,8 +38,11 @@
         <input type="radio" value="password" bind:group={encryptionMethod} /> Password
       </label>
       <label>
-        <input type="radio" value="fido2" bind:group={encryptionMethod} /> WebAuthn
-        PRF
+        <input
+          type="radio"
+          value="webauthn-prf"
+          bind:group={encryptionMethod}
+        /> WebAuthn PRF
       </label>
       <label>
         <input type="radio" value="none" bind:group={encryptionMethod} /> No encryption
