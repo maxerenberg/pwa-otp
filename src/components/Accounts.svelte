@@ -2,33 +2,28 @@
   import Button from "./Button.svelte";
   import Header from "./Header.svelte";
   import type { TOTPAccount } from "../lib/totp";
-  import commonStyles from "./common.module.css";
   import UserAddOutline from "./icons/UserAddOutline.svelte";
-  import styles from "./Accounts.module.css";
   import AccountListItem from "./AccountListItem.svelte";
   import Link from "./Link.svelte";
+  import PlusSolid from "./icons/PlusSolid.svelte";
+  import commonStyles from "./common.module.css";
+  import headerStyles from "./Header.module.css";
+  import styles from "./Accounts.module.css";
 
   export let accounts: TOTPAccount[];
-
-  accounts = [
-    {
-      secret: new Uint8Array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]),
-      name: "jdoe@gmail.com",
-      issuer: "Google",
-      algorithm: "SHA1",
-      digits: 6,
-    },
-    {
-      secret: new Uint8Array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]),
-      name: "jdoe@outlook.com",
-      issuer: "Microsoft",
-      algorithm: "SHA1",
-      digits: 6,
-    },
-  ];
 </script>
 
-<Header title="Authenticator" isAccountsPage />
+<Header title="Authenticator">
+  <Link
+    href="/#/add-account"
+    class="text-decoration-none"
+    slot="top-right-button"
+  >
+    <button class={headerStyles.headingButton} aria-label="Add account">
+      <PlusSolid class={headerStyles.headingIcon} />
+    </button>
+  </Link>
+</Header>
 
 {#if accounts.length === 0}
   <main class={commonStyles.mainCenter}>

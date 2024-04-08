@@ -1,9 +1,11 @@
+import { nanoid } from "nanoid";
+
 export class ParseError extends Error {}
 
 // See https://en.wikipedia.org/wiki/Base32#Base_32_Encoding_per_%C2%A76
 export function base32decode(s: string): Uint8Array | ParseError {
   s = s.toUpperCase();
-  s = s.replace(/=+$/, "");
+  s = s.replace(/[= ]/g, "");
   let value = 0;
   let numBits = 0;
   let arr: number[] = [];
@@ -54,7 +56,7 @@ export function base32encode(arr: Uint8Array): string {
   return chars.join("");
 }
 
-const hashAlgorithms = ["SHA1", "SHA256", "SHA512"] as const;
+export const hashAlgorithms = ["SHA1", "SHA256", "SHA512"] as const;
 export type HashAlgorithm = (typeof hashAlgorithms)[number];
 export type Digits = 6 | 8;
 
@@ -64,7 +66,12 @@ export type TOTPAccount = {
   issuer?: string;
   algorithm: HashAlgorithm;
   digits: Digits;
+  id: string;
 };
+
+export function generateAccountID(): string {
+  return nanoid(10);
+}
 
 /**
  * Converts an integer into an 8-byte Uint8Array in big-endian order
@@ -90,12 +97,19 @@ function intToBytes(x: number): Uint8Array {
 
 export class TOTPCalculator {
   private constructor(
-    readonly account: TOTPAccount,
     private readonly cryptoKey: CryptoKey,
+    private readonly digits: Digits,
   ) {}
 
-  static async factory(account: TOTPAccount): Promise<TOTPCalculator> {
-    const { algorithm, secret } = account;
+  static async factory({
+    algorithm,
+    secret,
+    digits,
+  }: {
+    algorithm: HashAlgorithm;
+    secret: Uint8Array;
+    digits: Digits;
+  }): Promise<TOTPCalculator> {
     const cryptoKey = await crypto.subtle.importKey(
       "raw",
       secret,
@@ -107,7 +121,7 @@ export class TOTPCalculator {
       false,
       ["sign"],
     );
-    return new TOTPCalculator(account, cryptoKey);
+    return new TOTPCalculator(cryptoKey, digits);
   }
 
   /**
@@ -115,7 +129,7 @@ export class TOTPCalculator {
    * @param unixTime time in seconds since the Unix epoch
    */
   async calculate(unixTime: number): Promise<number> {
-    const { digits } = this.account;
+    const { digits } = this;
     const interval = 30; // length of one time duration in seconds
     // Adapted from https://en.wikipedia.org/wiki/Time-based_one-time_password#Algorithm
     // and https://en.wikipedia.org/wiki/HMAC-based_one-time_password#Algorithm
@@ -135,85 +149,4 @@ export class TOTPCalculator {
     // Modulo 10^d
     return truncated % Math.pow(10, digits);
   }
-}
-
-type LabelInfo = {
-  issuer: string | undefined;
-  accountName: string;
-};
-
-function parseLabel(label: string): LabelInfo {
-  label = decodeURIComponent(label);
-  let accountName: string;
-  let issuer: string | undefined;
-  if (label.includes(":")) {
-    const colonIdx = label.indexOf(":");
-    issuer = label.substring(0, colonIdx);
-    accountName = label.substring(colonIdx + 1);
-  } else {
-    accountName = label;
-  }
-  return { accountName, issuer };
-}
-
-// See https://github.com/google/google-authenticator/wiki/Key-Uri-Format
-// TODO: accept optional decryption key
-export function parseOTPAuthURL(urlStr: string): TOTPAccount | ParseError {
-  const url = new URL(urlStr);
-  if (url.protocol !== "otpauth:") {
-    return new ParseError(
-      `Expected protocol to be 'otpauth:', got '${url.protocol}'`,
-    );
-  }
-  if (url.host !== "totp") {
-    return new ParseError(`Expected type to be 'totp', got '${url.host}'`);
-  }
-  const secret = url.searchParams.get("secret");
-  if (!secret) {
-    return new ParseError("Missing parameter 'secret'");
-  }
-  const decodedSecret = base32decode(secret);
-  if (decodedSecret instanceof ParseError) {
-    return decodedSecret;
-  }
-  const labelInfo = parseLabel(url.pathname);
-  const algorithm = url.searchParams.get("algorithm") ?? "SHA1";
-  if (!hashAlgorithms.includes(algorithm as HashAlgorithm)) {
-    return new ParseError(`Invalid algorithm '${algorithm}'`);
-  }
-  const digits = url.searchParams.has("digits")
-    ? parseInt(url.searchParams.get("digits")!)
-    : 6;
-  if (digits !== 6 && digits !== 8) {
-    return new ParseError(`Invalid digits: ${url.searchParams.get("digits")}`);
-  }
-  return {
-    secret: decodedSecret,
-    name: labelInfo.accountName,
-    issuer: url.searchParams.get("issuer") ?? labelInfo.issuer,
-    algorithm: algorithm as HashAlgorithm,
-    digits,
-  };
-}
-
-// TODO: accept optional encryption key
-export function serializeTOTPAccountToURL(account: TOTPAccount): string {
-  let label: string;
-  if (account.issuer) {
-    label =
-      encodeURIComponent(account.issuer) +
-      ":" +
-      encodeURIComponent(account.name);
-  } else {
-    label = encodeURIComponent(account.name);
-  }
-  let url = new URL("otpauth://totp/" + label);
-  // TODO: encrypt secret with password if user has one
-  url.searchParams.append("secret", base32encode(account.secret));
-  if (account.issuer) {
-    url.searchParams.append("issuer", account.issuer);
-  }
-  url.searchParams.append("algorithm", account.algorithm);
-  url.searchParams.append("digits", account.digits.toString());
-  return url.toString().replace("+", "%20");
 }

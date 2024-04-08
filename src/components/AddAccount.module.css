@@ -13,13 +13,28 @@
   border-bottom: var(--app-section-border);
   padding-left: 1rem;
 
-  > input {
+  input {
     border: none;
     width: 100%;
     padding: 0.75em 0.25em;
+  }
 
-    &:not(:last-child) {
-      border-bottom: var(--app-section-border);
+  /* last input is wrapped in a div */
+  > input {
+    border-bottom: var(--app-section-border);
+  }
+}
+
+.secretContainer {
+  position: relative;
+
+  .eyeButton {
+    position: absolute;
+    top: 0;
+    right: 1rem;
+    transform: translateY(50%);
+    > .eyeIcon {
+      color: var(--app-section-icon-color);
     }
   }
 }
@@ -49,4 +64,10 @@
   &:not([disabled]) {
     font-weight: bold;
   }
+}
+
+.errorMessage {
+  text-align: center;
+  margin-top: 2rem;
+  color: red;
 }

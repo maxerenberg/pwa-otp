@@ -29,6 +29,8 @@
   .headingButton {
     border-radius: 0.5rem;
     padding: 0.25rem;
+    width: 2rem;
+    height: 2rem;
     border: none;
     color: white;
     /* Disable the translucent gray box on iOS Safari when :active.
@@ -39,19 +41,9 @@
       color: rgba(255 255 255 / 50%);
     }
   }
-}
 
-.header.centerTitle {
-  justify-content: center;
-  position: relative;
-
-  .heading {
-    flex-grow: 0;
-  }
-
-  .backLink {
-    position: absolute;
-    left: var(--padding-x);
+  &.centerTitle {
+    justify-content: center;
   }
 }
 

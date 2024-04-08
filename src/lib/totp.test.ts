@@ -3,7 +3,6 @@ import {
   base32decode,
   base32encode,
   TOTPCalculator,
-  type TOTPAccount,
   ParseError,
   type Digits,
 } from "./totp";
@@ -46,12 +45,11 @@ test.each(totpTestCases)(
   async (digits, now, encodedSecret, expected) => {
     const secret = base32decode(encodedSecret);
     if (secret instanceof ParseError) throw secret;
-    const account: TOTPAccount = {
+    const account = {
       secret,
-      name: "jdoe@gmail.com",
       algorithm: "SHA1",
       digits,
-    };
+    } as const;
     const calculator = await TOTPCalculator.factory(account);
     const code = await calculator.calculate(now);
     expect(code).toBe(expected);

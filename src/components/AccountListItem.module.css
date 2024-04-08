@@ -1,9 +1,10 @@
 .item {
   background-color: var(--app-section-bg);
-  cursor: pointer;
 }
 
 .itemInner {
+  text-decoration: none;
+  color: currentcolor;
   display: flex;
   margin-left: 0.75rem;
   border-bottom: var(--app-section-border);
@@ -39,14 +40,10 @@
 .otpCode {
   font-family: monospace;
   font-weight: bold;
-  font-size: 1.5rem;
-  line-height: 2rem;
-  padding-bottom: 0.5rem;
-  color: var(--primary-600);
-
-  @media (prefers-color-scheme: dark) {
-    color: var(--primary-300);
-  }
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+  margin-bottom: 0.5rem;
+  color: var(--otp-code-color);
 }
 
 .rightArrowContainer {

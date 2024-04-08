@@ -8,7 +8,7 @@
   import CogOutline from "./icons/CogOutline.svelte";
   import EyeSlashOutline from "./icons/EyeSlashOutline.svelte";
   import MessagesOutline from "./icons/MessagesOutline.svelte";
-  import PlusSolid from "./icons/PlusSolid.svelte";
+
   import QuestionCircleOutline from "./icons/QuestionCircleOutline.svelte";
   import UserEditOutline from "./icons/UserEditOutline.svelte";
   import Link from "./Link.svelte";
@@ -17,8 +17,8 @@
   import styles from "./Header.module.css";
 
   export let title: string;
+  export let htmlTitle: string | undefined = undefined;
   export let backHref: string | undefined = undefined;
-  export let isAccountsPage = false;
 
   // TODO: use a non-drawer sidebar on desktop
   let drawerOpen = false;
@@ -32,12 +32,12 @@
 </script>
 
 <svelte:head>
-  <title>{title}</title>
+  <title>{htmlTitle ?? title}</title>
 </svelte:head>
 
 <header class={`${styles.header} ${backHref ? styles.centerTitle : ""}`}>
   {#if backHref}
-    <Link href={backHref} class={styles.backLink}>
+    <Link href={backHref}>
       <button
         class={styles.headingButton}
         aria-label="Back"
@@ -61,13 +61,7 @@
   <h1 class={styles.heading}>
     {title}
   </h1>
-  {#if isAccountsPage}
-    <Link href="/#/add-account" class="text-decoration-none">
-      <button class={styles.headingButton} aria-label="Add account">
-        <PlusSolid class={styles.headingIcon} />
-      </button>
-    </Link>
-  {/if}
+  <slot name="top-right-button" />
 </header>
 
 <Drawer bind:open={drawerOpen}>

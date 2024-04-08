@@ -23,7 +23,9 @@ object {
 
 button {
   cursor: pointer;
+  border: none;
   margin: 0;
+  padding: 0;
 }
 
 p {
@@ -34,7 +36,7 @@ input {
   /* font: inherit doesn't seem to be working on iOS Safari 12.5 */
   font-size: inherit;
 
-  &[type="text"] {
+  &:is([type="text"], [type="password"], :not([type])) {
     /* iOS Safari seems to add a rounded border */
     border-radius: 0;
   }
@@ -70,6 +72,7 @@ input {
   --app-section-icon-color: #666;
   --danger: #dc3545;
   --danger-hover: #bb2d3b;
+  --otp-code-color: var(--primary-600);
 
   @media (prefers-color-scheme: dark) {
     --app-main-bg: #333;
@@ -77,6 +80,7 @@ input {
     --app-section-bg: #444;
     --app-section-border: 1px solid #88888888;
     --app-section-icon-color: #bbb;
+    --otp-code-color: var(--primary-300);
   }
 }
 

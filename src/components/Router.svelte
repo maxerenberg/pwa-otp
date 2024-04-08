@@ -7,6 +7,7 @@
   import Settings from "./Settings.svelte";
   import DeleteAccount from "./DeleteAccount.svelte";
   import AddAccount from "./AddAccount.svelte";
+  import Account from "./Account.svelte";
 
   const routes: Record<string, ComponentType> = {
     "/": Home,
@@ -14,6 +15,9 @@
     "/#/settings": Settings,
     "/#/settings/delete-account": DeleteAccount,
     "/#/add-account": AddAccount,
+  };
+  const prefixRoutes: Record<string, ComponentType> = {
+    "/#/account/": Account,
   };
 
   onMount(() => {
@@ -47,11 +51,16 @@
     };
   });
 
-  function getCurrentComponent() {
+  function getCurrentComponent(): ComponentType {
     const path = getNormalizedPath();
+    const component = routes[path];
+    if (component) return component;
+    for (const [prefix, component] of Object.entries(prefixRoutes)) {
+      if (path.startsWith(prefix)) return component;
+    }
     // TODO: after build step, create symlink from 404.html to index.html
     // (for GitHub pages)
-    return routes[path] ?? PageNotFound;
+    return PageNotFound;
   }
 
   let currentComponent = getCurrentComponent();

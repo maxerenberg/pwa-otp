@@ -11,10 +11,16 @@
     "format": "prettier --write .",
     "test": "vitest"
   },
+  "browserslist": [
+    "iOS >= 12.5",
+    "Firefox ESR"
+  ],
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^3.0.1",
     "@tsconfig/svelte": "^5.0.2",
     "autoprefixer": "^10.4.16",
+    "browserslist": "^4.23.0",
+    "browserslist-to-esbuild": "^2.1.1",
     "eslint": "^8.57.0",
     "postcss": "^8.4.32",
     "postcss-load-config": "^5.0.2",
@@ -31,6 +37,7 @@
   },
   "dependencies": {
     "bits-ui": "^0.21.1",
+    "nanoid": "^5.0.7",
     "sanitize.css": "^13.0.0"
   }
 }

@@ -14,9 +14,8 @@
   }
 </script>
 
-<Header title="Delete account" backHref="/#/settings" />
-
 {#if $settings}
+  <Header title="Delete account" backHref="/#/settings" />
   <main class={commonStyles.mainCenter}>
     <p>
       Are you sure you want to permanently delete all of your data? This action
@@ -29,6 +28,7 @@
     >
   </main>
 {:else if deleted}
+  <Header title="Account deleted" backHref="/#/settings" />
   <main class={commonStyles.mainCenter}>
     <p>Your account was successfully deleted.</p>
     <Link href="/" class="text-decoration-none">

@@ -1,18 +1,23 @@
-import { derived, writable } from "svelte/store";
+import { writable } from "svelte/store";
 import {
+  base32decode,
+  base32encode,
+  generateAccountID,
   ParseError,
-  parseOTPAuthURL,
-  serializeTOTPAccountToURL,
   type TOTPAccount,
 } from "./totp";
 
 export type EncryptionMethod = "password" | "webauthn-prf" | "none";
 
 const SCHEMA_VERSION = 1;
+type EncodedTOTPAccount = Omit<TOTPAccount, "id" | "secret"> & {
+  id?: string;
+  secret: string;
+};
 type EncodedUserSettings = {
   version: number;
   encryptionMethod: EncryptionMethod;
-  accounts: string[]; // array of otpauth:// URLs
+  accounts: EncodedTOTPAccount[];
 };
 
 export type UserSettings = {
@@ -45,11 +50,19 @@ function getStoredSettings(): UserSettings | ParseError | null {
     );
   }
   let accounts: TOTPAccount[] = [];
-  for (const otpauthURL of encodedSettings.accounts) {
-    const account = parseOTPAuthURL(otpauthURL);
-    if (account instanceof ParseError) {
-      return account;
+  for (const encodedAccount of encodedSettings.accounts) {
+    let id: string;
+    if (encodedAccount.id) {
+      id = encodedAccount.id;
+    } else {
+      // Generate a new ID if it wasn't saved
+      id = generateAccountID();
     }
+    const secret = base32decode(encodedAccount.secret);
+    if (secret instanceof ParseError) {
+      return secret;
+    }
+    const account: TOTPAccount = { ...encodedAccount, id, secret };
     accounts.push(account);
   }
   return {
@@ -62,7 +75,10 @@ function save(settings: UserSettings) {
   const encodedSettings: EncodedUserSettings = {
     version: SCHEMA_VERSION,
     encryptionMethod: settings.encryptionMethod,
-    accounts: settings.accounts.map(serializeTOTPAccountToURL),
+    accounts: settings.accounts.map((account) => ({
+      ...account,
+      secret: base32encode(account.secret),
+    })),
   };
   localStorage.setItem(
     LOCALSTORAGE_SETTINGS_KEY,
@@ -70,10 +86,13 @@ function save(settings: UserSettings) {
   );
 }
 
+// TODO: create TOTPCalculator instances (but factory is async...)
 // TODO: do computation in Worker instead of delaying startup
 const initialSettings = getStoredSettings();
 export const settingsError =
   initialSettings instanceof ParseError ? initialSettings : null;
+// TODO: show error message to user if stored settings are corrupt
+if (settingsError) console.error(settingsError);
 
 function createSettingsStore() {
   const { subscribe, set, update } = writable(
@@ -86,9 +105,11 @@ function createSettingsStore() {
       save(newSettings);
       set(newSettings);
     },
-    addAccount(account: TOTPAccount) {
+    addAccount(formAccount: Omit<TOTPAccount, "id">) {
       update((s) => {
         if (s) {
+          const id = generateAccountID();
+          const account: TOTPAccount = { ...formAccount, id };
           s.accounts.push(account);
           save(s);
         }
@@ -96,7 +117,6 @@ function createSettingsStore() {
       });
     },
     swapAccounts(i: number, j: number) {
-      // TODO: save to localStorage
       update((s) => {
         if (s) {
           const temp = s.accounts[i];
@@ -115,8 +135,3 @@ function createSettingsStore() {
 }
 
 export const settings = createSettingsStore();
-
-export const settingsExist = derived(
-  settings,
-  ($settings) => $settings !== null,
-);

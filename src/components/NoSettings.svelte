@@ -1,12 +1,14 @@
 <script lang="ts">
   import Button from "./Button.svelte";
-  import commonStyles from "./common.module.css";
+  import Header from "./Header.svelte";
   import Link from "./Link.svelte";
+  import commonStyles from "./common.module.css";
 </script>
 
 <main class={commonStyles.mainCenter}>
+  <Header title="Authenticator" />
   <p>You need to setup an account to access this page.</p>
   <Link href="/" class="text-decoration-none">
-    <Button class={`${commonStyles.largeBoldButton}`}>Return home</Button>
+    <Button class={commonStyles.largeBoldButton}>Return home</Button>
   </Link>
 </main>
