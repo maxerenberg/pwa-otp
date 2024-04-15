@@ -1,0 +1,31 @@
+.section {
+  background-color: var(--app-section-bg);
+  margin-top: 2.25rem;
+  padding: 0.75rem 1.25rem;
+  border-top: var(--app-section-border);
+  border-bottom: var(--app-section-border);
+}
+
+.accountNameContainer {
+  display: flex;
+  justify-content: space-between;
+}
+
+.nameAndArrow {
+  display: flex;
+  align-items: center;
+
+  .arrow {
+    width: 1.125em;
+    height: 1.125em;
+    margin-left: 0.5em;
+    position: relative;
+    top: 1px;
+    color: var(--app-section-icon-color);
+  }
+}
+
+.removeAccountContainer {
+  text-align: center;
+  color: var(--danger);
+}

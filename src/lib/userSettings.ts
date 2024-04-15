@@ -135,3 +135,20 @@ function createSettingsStore() {
 }
 
 export const settings = createSettingsStore();
+
+/**
+ * @returns undefined if the settings are null; null if the settings
+ *   are loaded but the account does not exist; or the account in
+ *   settings.account with the given ID
+ */
+export function getAccountByID(
+  settings: UserSettings | null,
+  accountID: string,
+): TOTPAccount | undefined | null {
+  if (!settings) return undefined;
+  const filtered = settings.accounts.filter((a) => a.id === accountID);
+  if (filtered.length === 0) {
+    return null;
+  }
+  return filtered[0];
+}

@@ -8,6 +8,7 @@
   import DeleteAccount from "./DeleteAccount.svelte";
   import AddAccount from "./AddAccount.svelte";
   import Account from "./Account.svelte";
+  import AccountSettings from "./AccountSettings.svelte";
 
   const routes: Record<string, ComponentType> = {
     "/": Home,
@@ -16,9 +17,10 @@
     "/#/settings/delete-account": DeleteAccount,
     "/#/add-account": AddAccount,
   };
-  const prefixRoutes: Record<string, ComponentType> = {
-    "/#/account/": Account,
-  };
+  const regexRoutes: [RegExp, ComponentType][] = [
+    [new RegExp("^/#/account/[^/]+$"), Account],
+    [new RegExp("^/#/account/[^/]+/settings$"), AccountSettings],
+  ];
 
   onMount(() => {
     // Adapted from https://stackoverflow.com/a/52809105
@@ -55,8 +57,8 @@
     const path = getNormalizedPath();
     const component = routes[path];
     if (component) return component;
-    for (const [prefix, component] of Object.entries(prefixRoutes)) {
-      if (path.startsWith(prefix)) return component;
+    for (const [pattern, component] of regexRoutes) {
+      if (pattern.test(path)) return component;
     }
     // TODO: after build step, create symlink from 404.html to index.html
     // (for GitHub pages)

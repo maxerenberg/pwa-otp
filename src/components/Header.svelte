@@ -61,7 +61,10 @@
   <h1 class={styles.heading}>
     {title}
   </h1>
-  <slot name="top-right-button" />
+  <slot name="top-right-button">
+    <!-- Keep a div on both sides so that the title is in the center -->
+    <div class={styles.headingIcon} />
+  </slot>
 </header>
 
 <Drawer bind:open={drawerOpen}>

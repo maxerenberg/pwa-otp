@@ -16,9 +16,9 @@
   }
 
   &.danger:not([disabled]) {
-    background-color: var(--danger);
+    background-color: var(--danger-bg);
     &:hover {
-      background-color: var(--danger-hover);
+      background-color: var(--danger-bg-hover);
     }
   }
 

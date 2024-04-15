@@ -41,10 +41,10 @@
       color: rgba(255 255 255 / 50%);
     }
   }
+}
 
-  &.centerTitle {
-    justify-content: center;
-  }
+.header.centerTitle .heading {
+  text-align: center;
 }
 
 .headingIcon {
