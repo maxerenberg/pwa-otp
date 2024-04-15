@@ -60,7 +60,9 @@
 .navList > li {
   border-radius: 0.5rem;
 
-  &:is(:hover, :active) {
+  /* :is and :where are not supported on iOS Safari 12.5 */
+  &:hover,
+  &:active {
     background-color: var(--app-main-bg);
   }
 }

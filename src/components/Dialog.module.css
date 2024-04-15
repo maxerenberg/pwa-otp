@@ -1,0 +1,19 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background-color: rgba(0 0 0 / 50%);
+}
+
+/* Adapted from https://melt-ui.com/docs/builders/dialog#drawer */
+
+.content {
+  z-index: 50;
+  box-shadow:
+    0 10px 15px -3px rgb(0 0 0 / 0.1),
+    0 4px 6px -4px rgb(0 0 0 / 0.1);
+
+  &:focus {
+    outline: none;
+  }
+}

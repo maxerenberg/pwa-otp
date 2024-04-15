@@ -116,6 +116,29 @@ function createSettingsStore() {
         return s;
       });
     },
+    removeAccount(accountID: string) {
+      update((s) => {
+        if (s) {
+          s.accounts = s.accounts.filter((account) => account.id !== accountID);
+          save(s);
+        }
+        return s;
+      });
+    },
+    setAccountIssuer(accountID: string, issuer: string) {
+      update((s) => {
+        if (s) {
+          for (const account of s.accounts) {
+            if (account.id === accountID) {
+              account.issuer = issuer;
+              save(s);
+              break;
+            }
+          }
+        }
+        return s;
+      });
+    },
     swapAccounts(i: number, j: number) {
       update((s) => {
         if (s) {

@@ -3,6 +3,7 @@
   //import { Dialog } from "bits-ui";
   import * as Dialog from "../../node_modules/bits-ui/dist/bits/dialog";
   import { fade, fly } from "svelte/transition";
+  import dialogStyles from "./Dialog.module.css";
   import styles from "./Drawer.module.css";
   export let contentClass = "";
   export let open: boolean | undefined = undefined;
@@ -15,12 +16,12 @@
     <Dialog.Overlay
       transition={fade}
       transitionConfig={{ duration: 150 }}
-      class={styles.overlay}
+      class={dialogStyles.overlay}
     />
     <Dialog.Content
       transition={fly}
       transitionConfig={{ x: -350, duration: 300, opacity: 1 }}
-      class={`${styles.content} ${contentClass}`}
+      class={`${dialogStyles.content} ${styles.content} ${contentClass}`}
     >
       <slot />
     </Dialog.Content>

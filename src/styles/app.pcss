@@ -33,13 +33,17 @@ p {
 }
 
 input {
-  /* font: inherit doesn't seem to be working on iOS Safari 12.5 */
-  font-size: inherit;
+  font: inherit;
 
-  &:is([type="text"], [type="password"], :not([type])) {
+  /* :is and :where are not supported on iOS Safari 12.5 */
+  &:matches([type="text"], [type="password"], :not([type])) {
     /* iOS Safari seems to add a rounded border */
     border-radius: 0;
   }
+}
+
+button {
+  font: inherit;
 }
 
 :root {

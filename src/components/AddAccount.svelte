@@ -67,6 +67,7 @@
             placeholder="Secret"
             on:input={onSecretInput}
             type={hideSecret ? "password" : "text"}
+            autocomplete="off"
             required
           />
           <button
