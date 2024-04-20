@@ -6,7 +6,13 @@
   import NoAccount from "./NoAccount.svelte";
   import TimerCircle from "./TimerCircle.svelte";
   import { getNormalizedPath } from "../lib/routing";
-  import { getAccountByID, settings } from "../lib/userSettings";
+  import { now } from "../lib/timer";
+  import { CachingTOTPCalculator, otpCodeToStr } from "../lib/totp";
+  import {
+    getAccountByID,
+    settings,
+    totpCalculators,
+  } from "../lib/userSettings";
   import UserCircleSolid from "./icons/UserCircleSolid.svelte";
   import commonStyles from "./common.module.css";
   import headerStyles from "./Header.module.css";
@@ -14,6 +20,18 @@
 
   const accountID = getNormalizedPath().substring("/#/account/".length);
   $: account = getAccountByID($settings, accountID);
+  let otpCode: number | undefined;
+  let otpCodeStr = "";
+  $: calculator = CachingTOTPCalculator.factory(
+    account ? $totpCalculators[account.id] : undefined,
+  );
+  $: {
+    calculator?.calculate($now)?.then((code) => {
+      otpCode = code;
+      // TODO: fade animation when code changes
+      otpCodeStr = otpCodeToStr(code, account!.digits);
+    });
+  }
 </script>
 
 <IfSettings>
@@ -44,10 +62,10 @@
         </div>
       </div>
       <section class={styles.otpArea}>
-        <TimerCircle class={styles.timerCircle} now={1713630201} />
+        <TimerCircle class={styles.timerCircle} now={$now} />
         <div>
           <h4>One-time password</h4>
-          <div class={styles.otpCode}>772 544</div>
+          <div class={styles.otpCode}>{otpCodeStr}</div>
         </div>
       </section>
     </main>

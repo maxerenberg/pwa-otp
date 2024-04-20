@@ -1,10 +1,12 @@
-import { writable } from "svelte/store";
+import { derived, writable } from "svelte/store";
 import {
   base32decode,
   base32encode,
   generateAccountID,
   ParseError,
+  TOTPCalculator,
   type TOTPAccount,
+  type Digits,
 } from "./totp";
 
 export type EncryptionMethod = "password" | "webauthn-prf" | "none";
@@ -175,3 +177,33 @@ export function getAccountByID(
   }
   return filtered[0];
 }
+
+const initialTotpCalculators: Partial<Record<string, TOTPCalculator>> = {};
+export const totpCalculators = derived(
+  settings,
+  ($settings, set, update) => {
+    if (!$settings) return;
+    update((totpCalculators) => {
+      const validAccountIDs = new Set<string>();
+      for (const account of $settings.accounts) {
+        validAccountIDs.add(account.id);
+        // TODO: check if account changed (e.g. number of digits)
+        if (!totpCalculators.hasOwnProperty(account.id)) {
+          TOTPCalculator.factory(account).then((totpCalculator) => {
+            update((totpCalculators) => {
+              totpCalculators[account.id] = totpCalculator;
+              return totpCalculators;
+            });
+          });
+        }
+      }
+      for (const accountID of Object.keys(totpCalculators)) {
+        if (!validAccountIDs.has(accountID)) {
+          delete totpCalculators[accountID];
+        }
+      }
+      return totpCalculators;
+    });
+  },
+  initialTotpCalculators,
+);

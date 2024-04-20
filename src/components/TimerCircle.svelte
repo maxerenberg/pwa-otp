@@ -17,9 +17,18 @@
   let y2 = 0;
   // See https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths#curve_commands
   let largeArcSweepFlag = 0;
+  // TODO: cache the calculations
   $: {
     secondsRemaining = totalSeconds - (now % totalSeconds);
+    // The angle of the blue arc
     let rad = (secondsRemaining / totalSeconds) * (2 * Math.PI);
+    if (secondsRemaining === totalSeconds) {
+      // If we do a full revolution (i.e. rad === 2 * PI), then no arc will
+      // be drawn at all, because the starting and ending points are the same.
+      // We want a full arc (i.e. circle) to be drawn in this situation.
+      // As a workaround, we make rad slightly less than 2* PI.
+      rad -= 1e-6;
+    }
     // Add pi / 2 because the starting point of the arc is at pi / 2
     rad += Math.PI / 2;
     x2 = r * Math.cos(rad);

@@ -40,19 +40,20 @@
 .otpContainer {
   display: flex;
   align-items: center;
-  margin-bottom: 0.5rem;
+  margin-top: 0.25rem;
+  margin-bottom: 0.75rem;
 
   .otpCode {
+    /* Need to use a fixed width since we're not using a monospace font */
+    width: var(--width);
     font-weight: bold;
     font-size: 1.875rem;
-    line-height: 2.25rem;
     color: var(--otp-code-color);
   }
 
   .timerCircle {
     height: 1.75rem;
     width: 1.75rem;
-    margin-left: 1rem;
   }
 }
 

@@ -1,15 +1,28 @@
 <script lang="ts">
-  import type { TOTPAccount } from "../lib/totp";
+  import { CachingTOTPCalculator, type TOTPAccount } from "../lib/totp";
   import Link from "./Link.svelte";
   import UserCircleSolid from "./icons/UserCircleSolid.svelte";
   import AngleRight from "./icons/AngleRight.svelte";
-  import styles from "./AccountListItem.module.css";
   import TimerCircle from "./TimerCircle.svelte";
+  import { now } from "../lib/timer";
+  import { otpCodeToStr } from "../lib/totp";
+  import { totpCalculators } from "../lib/userSettings";
+  import styles from "./AccountListItem.module.css";
 
   export let account: TOTPAccount;
+  let otpCode: number | undefined;
+  let otpCodeStr = "";
+  $: calculator = CachingTOTPCalculator.factory($totpCalculators[account.id]);
+  $: {
+    calculator?.calculate($now)?.then((code) => {
+      otpCode = code;
+      // TODO: fade animation when code changes
+      otpCodeStr = otpCodeToStr(code, account.digits);
+    });
+  }
+  $: otpCodeStrWidth = account.digits === 6 ? "4.25em" : "5.375em";
 </script>
 
-<!-- TODO: show account page when item is clicked -->
 <li class={styles.item}>
   <Link class={styles.itemInner} href={`/#/account/${account.id}`}>
     <div class={styles.grid}>
@@ -22,8 +35,10 @@
       <!-- empty div for bottom-left corner in grid -->
       <div />
       <div class={styles.otpContainer}>
-        <span class={styles.otpCode}>772 544</span>
-        <TimerCircle class={styles.timerCircle} now={1713630201} />
+        <span class={styles.otpCode} style={`--width: ${otpCodeStrWidth}`}
+          >{otpCodeStr}</span
+        >
+        <TimerCircle class={styles.timerCircle} now={$now} />
       </div>
     </div>
     <div class={styles.rightArrowContainer}>

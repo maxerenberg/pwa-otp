@@ -95,6 +95,9 @@ function intToBytes(x: number): Uint8Array {
   return arr;
 }
 
+// TODO: allow this to be configurable per account
+const INTERVAL = 30; // length of one time duration in seconds
+
 export class TOTPCalculator {
   private constructor(
     private readonly cryptoKey: CryptoKey,
@@ -130,11 +133,10 @@ export class TOTPCalculator {
    */
   async calculate(unixTime: number): Promise<number> {
     const { digits } = this;
-    const interval = 30; // length of one time duration in seconds
     // Adapted from https://en.wikipedia.org/wiki/Time-based_one-time_password#Algorithm
     // and https://en.wikipedia.org/wiki/HMAC-based_one-time_password#Algorithm
     // and https://github.com/bellstrand/totp-generator/blob/master/src/index.ts
-    const counter = Math.floor(unixTime / interval);
+    const counter = Math.floor(unixTime / INTERVAL);
     const MAC = new Uint8Array(
       await crypto.subtle.sign("HMAC", this.cryptoKey, intToBytes(counter)),
     );
@@ -149,4 +151,36 @@ export class TOTPCalculator {
     // Modulo 10^d
     return truncated % Math.pow(10, digits);
   }
+}
+
+export class CachingTOTPCalculator {
+  private prevCounter = -1;
+
+  private constructor(private readonly calculator: TOTPCalculator) {}
+
+  static factory(
+    calculator: TOTPCalculator | undefined,
+  ): CachingTOTPCalculator | undefined {
+    if (!calculator) return undefined;
+    return new CachingTOTPCalculator(calculator);
+  }
+
+  /**
+   * @returns undefined if the counter has not changed since the previous
+   *   calculation
+   */
+  calculate(unixTime: number): Promise<number> | undefined {
+    const counter = Math.floor(unixTime / INTERVAL);
+    if (counter === this.prevCounter) return undefined;
+    return this.calculator.calculate(unixTime).then((value) => {
+      this.prevCounter = counter;
+      return value;
+    });
+  }
+}
+
+export function otpCodeToStr(code: number, digits: Digits): string {
+  const halfLen = digits / 2;
+  const s = code.toString().padStart(digits, "0");
+  return s.substring(0, halfLen) + " " + s.substring(halfLen);
 }
