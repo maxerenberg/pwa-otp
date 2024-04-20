@@ -37,13 +37,23 @@
   }
 }
 
-.otpCode {
-  font-family: monospace;
-  font-weight: bold;
-  font-size: 1.875rem;
-  line-height: 2.25rem;
+.otpContainer {
+  display: flex;
+  align-items: center;
   margin-bottom: 0.5rem;
-  color: var(--otp-code-color);
+
+  .otpCode {
+    font-weight: bold;
+    font-size: 1.875rem;
+    line-height: 2.25rem;
+    color: var(--otp-code-color);
+  }
+
+  .timerCircle {
+    height: 1.75rem;
+    width: 1.75rem;
+    margin-left: 1rem;
+  }
 }
 
 .rightArrowContainer {

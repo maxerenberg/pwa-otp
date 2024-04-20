@@ -4,6 +4,7 @@
   import UserCircleSolid from "./icons/UserCircleSolid.svelte";
   import AngleRight from "./icons/AngleRight.svelte";
   import styles from "./AccountListItem.module.css";
+  import TimerCircle from "./TimerCircle.svelte";
 
   export let account: TOTPAccount;
 </script>
@@ -20,7 +21,10 @@
       </div>
       <!-- empty div for bottom-left corner in grid -->
       <div />
-      <div class={styles.otpCode}>772 544</div>
+      <div class={styles.otpContainer}>
+        <span class={styles.otpCode}>772 544</span>
+        <TimerCircle class={styles.timerCircle} now={1713630201} />
+      </div>
     </div>
     <div class={styles.rightArrowContainer}>
       <AngleRight class={styles.rightArrow} />

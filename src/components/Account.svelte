@@ -4,6 +4,7 @@
   import IfSettings from "./IfSettings.svelte";
   import CogOutline from "./icons/CogOutline.svelte";
   import NoAccount from "./NoAccount.svelte";
+  import TimerCircle from "./TimerCircle.svelte";
   import { getNormalizedPath } from "../lib/routing";
   import { getAccountByID, settings } from "../lib/userSettings";
   import UserCircleSolid from "./icons/UserCircleSolid.svelte";
@@ -43,9 +44,11 @@
         </div>
       </div>
       <section class={styles.otpArea}>
-        <h4>One-time password</h4>
-        <!-- TODO: timer -->
-        <div class={styles.otpCode}>772 544</div>
+        <TimerCircle class={styles.timerCircle} now={1713630201} />
+        <div>
+          <h4>One-time password</h4>
+          <div class={styles.otpCode}>772 544</div>
+        </div>
       </section>
     </main>
   {/if}
