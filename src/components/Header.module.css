@@ -57,34 +57,44 @@
   }
 }
 
-.navList > li {
-  border-radius: 0.5rem;
+.navList {
+  > li {
+    border-radius: 0.5rem;
 
-  /* :is and :where are not supported on iOS Safari 12.5 */
-  &:hover,
-  &:active {
-    background-color: var(--app-main-bg);
-  }
-}
-
-.navList a {
-  text-decoration-line: none;
-  color: currentcolor;
-  display: flex;
-  align-items: center;
-  padding: 0.75rem;
-
-  > svg {
-    margin-right: 0.75rem;
-    color: #555;
-
-    @media (prefers-color-scheme: dark) {
-      color: #bbb;
+    /* :is and :where are not supported on iOS Safari 12.5 */
+    &:hover,
+    &:active {
+      background-color: var(--app-main-bg);
     }
-  }
 
-  > span {
-    position: relative;
-    top: -1px;
+    > a {
+      text-decoration-line: none;
+    }
+
+    > button {
+      width: 100%;
+    }
+
+    > a,
+    > button {
+      color: currentcolor;
+      display: flex;
+      align-items: center;
+      padding: 0.75rem;
+
+      > svg {
+        margin-right: 0.75rem;
+        color: #555;
+
+        @media (prefers-color-scheme: dark) {
+          color: #bbb;
+        }
+      }
+
+      > span {
+        position: relative;
+        top: -1px;
+      }
+    }
   }
 }

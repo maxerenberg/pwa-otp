@@ -11,6 +11,7 @@
   import styles from "./Accounts.module.css";
 
   export let accounts: TOTPAccount[];
+  export let hideCodes: boolean;
 </script>
 
 <Header title="Authenticator">
@@ -39,7 +40,7 @@
   <main class={commonStyles.appMain}>
     <ul>
       {#each accounts as account}
-        <AccountListItem {account} />
+        <AccountListItem {account} hideCode={hideCodes} />
       {/each}
     </ul>
   </main>

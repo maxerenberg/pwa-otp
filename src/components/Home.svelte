@@ -11,5 +11,5 @@
   <EnterPassword encryptedSettings={$settings} />
 {:else}
   <!-- TODO: show error page if settingsError is non-null -->
-  <Accounts accounts={$settings.accounts} />
+  <Accounts accounts={$settings.accounts} hideCodes={$settings.hideCodes} />
 {/if}

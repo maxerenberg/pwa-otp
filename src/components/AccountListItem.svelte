@@ -10,6 +10,7 @@
   import styles from "./AccountListItem.module.css";
 
   export let account: TOTPAccount;
+  export let hideCode: boolean;
   let otpCodeStr = "";
   $: calculator = CachingTOTPCalculator.factory($totpCalculators[account.id]);
   $: {
@@ -32,12 +33,14 @@
       </div>
       <!-- empty div for bottom-left corner in grid -->
       <div />
-      <div class={styles.otpContainer}>
-        <span class={styles.otpCode} style={`--width: ${otpCodeStrWidth}`}
-          >{otpCodeStr}</span
-        >
-        <TimerCircle class={styles.timerCircle} now={$now} />
-      </div>
+      {#if !hideCode}
+        <div class={styles.otpContainer}>
+          <span class={styles.otpCode} style={`--width: ${otpCodeStrWidth}`}
+            >{otpCodeStr}</span
+          >
+          <TimerCircle class={styles.timerCircle} now={$now} />
+        </div>
+      {/if}
     </div>
     <div class={styles.rightArrowContainer}>
       <AngleRight class={styles.rightArrow} />

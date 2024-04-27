@@ -6,13 +6,14 @@
   import AngleLeft from "./icons/AngleLeft.svelte";
   import BarsSolid from "./icons/BarsSolid.svelte";
   import CogOutline from "./icons/CogOutline.svelte";
+  import EyeOutline from "./icons/EyeOutline.svelte";
   import EyeSlashOutline from "./icons/EyeSlashOutline.svelte";
   import MessagesOutline from "./icons/MessagesOutline.svelte";
-
   import QuestionCircleOutline from "./icons/QuestionCircleOutline.svelte";
   import UserEditOutline from "./icons/UserEditOutline.svelte";
   import Link from "./Link.svelte";
   import NavListItem from "./NavListItem.svelte";
+  import { settings } from "../lib/userSettings";
   import commonStyles from "./common.module.css";
   import styles from "./Header.module.css";
 
@@ -29,6 +30,11 @@
   // This is necessary to trigger :active on iOS Safari.
   // See https://stackoverflow.com/a/33681490.
   function onTouchStart() {}
+
+  async function onClickToggleHideCodes() {
+    await settings.toggleHideCodes();
+    drawerOpen = false;
+  }
 </script>
 
 <svelte:head>
@@ -78,10 +84,17 @@
         <UserEditOutline />
         <span>Rearrange accounts</span>
       </NavListItem>
-      <NavListItem href="#">
-        <EyeSlashOutline />
-        <span>Hide codes</span>
-      </NavListItem>
+      <li>
+        <button on:click={onClickToggleHideCodes}>
+          {#if $settings?.hideCodes}
+            <EyeOutline />
+            <span>Show codes</span>
+          {:else}
+            <EyeSlashOutline />
+            <span>Hide codes</span>
+          {/if}
+        </button>
+      </li>
       <NavListItem href="/#/settings">
         <CogOutline />
         <span>Settings</span>

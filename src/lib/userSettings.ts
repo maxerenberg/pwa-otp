@@ -35,6 +35,7 @@ type EncodedTOTPAccount =
   | EncodedEncryptedTOTPAccount;
 type EncodedUserSettings = {
   version: number;
+  hideCodes: boolean;
 } & (
   | {
       encryptionMethod: "password";
@@ -49,12 +50,14 @@ type EncodedUserSettings = {
 );
 
 export type EncryptedUserSettings = {
+  hideCodes: boolean;
   encryptionMethod: "password";
   iv: Uint8Array;
   salt: Uint8Array;
   encryptedAccounts: EncryptedTOTPAccount[];
 };
 export type UnencryptedUserSettings = {
+  hideCodes: boolean;
   accounts: UnencryptedTOTPAccount[];
 } & (
   | {
@@ -95,13 +98,13 @@ function getStoredSettings(): UserSettings | ParseError | null {
   } catch (err) {
     return new ParseError("Invalid JSON");
   }
-  // TODO: validate schema
+  // TODO: validate schema using Zod
   if (encodedSettings.version !== SCHEMA_VERSION) {
     return new ParseError(
       `Version mismatch: expected ${SCHEMA_VERSION}, got ${encodedSettings.version}`,
     );
   }
-  const { encryptionMethod } = encodedSettings;
+  const { encryptionMethod, hideCodes } = encodedSettings;
   if (encryptionMethod === "password") {
     const iv = base32decode(encodedSettings.iv);
     if (iv instanceof ParseError) return iv;
@@ -120,7 +123,7 @@ function getStoredSettings(): UserSettings | ParseError | null {
         encryptedSecret,
       };
     }
-    return { encryptionMethod, iv, salt, encryptedAccounts };
+    return { encryptionMethod, iv, salt, encryptedAccounts, hideCodes };
   } else if (encryptionMethod === "none") {
     const accounts: UnencryptedTOTPAccount[] = new Array(
       encodedSettings.accounts.length,
@@ -135,7 +138,7 @@ function getStoredSettings(): UserSettings | ParseError | null {
         secret,
       };
     }
-    return { encryptionMethod, accounts };
+    return { encryptionMethod, accounts, hideCodes };
   } else {
     // Should never get here
     return new ParseError(
@@ -162,6 +165,7 @@ async function save(settings: UnencryptedUserSettings) {
     await Promise.all(promises);
     encodedSettings = {
       version: SCHEMA_VERSION,
+      hideCodes: settings.hideCodes,
       accounts: settings.accounts.map((account, i) => {
         const { secret, ...accountWithoutSecret } = account;
         return {
@@ -176,6 +180,7 @@ async function save(settings: UnencryptedUserSettings) {
   } else if (encryptionMethod === "none") {
     encodedSettings = {
       version: SCHEMA_VERSION,
+      hideCodes: settings.hideCodes,
       accounts: settings.accounts.map((account) => ({
         ...account,
         secret: base32encode(account.secret),
@@ -215,6 +220,7 @@ async function decryptSettings(
   await Promise.all(promises);
   return {
     encryptionMethod: "password",
+    hideCodes: settings.hideCodes,
     accounts: settings.encryptedAccounts.map((account, i) => {
       const { encryptedSecret, ...accountWithoutSecret } = account;
       return {
@@ -268,6 +274,7 @@ function createSettingsStore() {
     async createWithoutEncyprtion() {
       const newSettings: UnencryptedUserSettings = {
         encryptionMethod: "none",
+        hideCodes: false,
         accounts: [],
       };
       await save(newSettings);
@@ -276,6 +283,7 @@ function createSettingsStore() {
     async createWithPassword(password: string) {
       const { salt, iv } = generateSaltAndIV();
       const newSettings: UnencryptedUserSettings = {
+        hideCodes: false,
         encryptionMethod: "password",
         key: await deriveKey(password, salt),
         iv,
@@ -314,6 +322,12 @@ function createSettingsStore() {
             break;
           }
         }
+        return s;
+      });
+    },
+    async toggleHideCodes() {
+      await updateAsync(update, (s) => {
+        s.hideCodes = !s.hideCodes;
         return s;
       });
     },
@@ -358,6 +372,8 @@ export const totpCalculators = derived(
   settings,
   ($settings, set, update) => {
     if (!$settings || settingsAreEncrypted($settings)) return;
+    // TODO: consider using https://github.com/square/svelte-store to simplify
+    // async logic
     update((totpCalculators) => {
       const validAccountIDs = new Set<string>();
       // Create calculators for new accounts
