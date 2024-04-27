@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "format": "prettier --write .",
-    "test": "vitest"
+    "test": "vitest --run"
   },
   "browserslist": [
     "iOS >= 12.5",

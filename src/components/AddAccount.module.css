@@ -69,5 +69,5 @@
 .errorMessage {
   text-align: center;
   margin-top: 2rem;
-  color: red;
+  color: var(--form-error-msg-color);
 }

@@ -32,18 +32,18 @@
   const fadeTransitionConfig: FadeParams = { duration: 150 };
   const flyTransitionConfig: FlyParams = { duration: 150, y: 350 };
 
-  function onSubmitRenameAccount(ev: SubmitEvent) {
+  async function onSubmitRenameAccount(ev: SubmitEvent) {
     ev.preventDefault();
     if (!account) return;
-    settings.setAccountIssuer(account.id, inputIssuer);
+    await settings.setAccountIssuer(account.id, inputIssuer);
     displayIssuer = inputIssuer;
     renameAccountDialogOpen = false;
   }
 
-  function onSubmitRemoveAccount(ev: SubmitEvent) {
+  async function onSubmitRemoveAccount(ev: SubmitEvent) {
     ev.preventDefault();
     if (!account) return;
-    settings.removeAccount(account.id);
+    await settings.removeAccount(account.id);
     redirectTo("/");
   }
 </script>

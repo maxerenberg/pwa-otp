@@ -3,6 +3,7 @@
   import { getNormalizedPath } from "../lib/routing";
   import Home from "./Home.svelte";
   import SetupSecurity from "./SetupSecurity.svelte";
+  import SetupPassword from "./SetupPassword.svelte";
   import PageNotFound from "./PageNotFound.svelte";
   import Settings from "./Settings.svelte";
   import DeleteAccount from "./DeleteAccount.svelte";
@@ -13,6 +14,7 @@
   const routes: Record<string, ComponentType> = {
     "/": Home,
     "/#/setup/security": SetupSecurity,
+    "/#/setup/security/password": SetupPassword,
     "/#/settings": Settings,
     "/#/settings/delete-account": DeleteAccount,
     "/#/add-account": AddAccount,

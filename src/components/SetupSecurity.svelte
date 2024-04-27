@@ -1,22 +1,21 @@
 <script lang="ts">
   import Button from "./Button.svelte";
   import Header from "./Header.svelte";
-  import commonStyles from "./common.module.css";
   import { settings, type EncryptionMethod } from "../lib/userSettings";
   import { redirectTo } from "../lib/routing";
+  import commonStyles from "./common.module.css";
   import styles from "./SetupSecurity.module.css";
 
   let encryptionMethod: EncryptionMethod = "password";
 
-  function onSubmit(ev: SubmitEvent) {
+  async function onSubmit(ev: SubmitEvent) {
     ev.preventDefault();
-    // TODO: support password encryption
-    // TODO: support FIDO2 encryption
     if (encryptionMethod === "none") {
-      settings.create(encryptionMethod);
+      // TODO: disable button while waiting
+      await settings.createWithoutEncyprtion();
       redirectTo("/");
     } else {
-      console.error(`${encryptionMethod} is not supported yet`);
+      redirectTo("/#/setup/security/password");
     }
   }
 </script>
@@ -36,13 +35,6 @@
       <legend class={commonStyles.srOnly}>Password encryption method</legend>
       <label>
         <input type="radio" value="password" bind:group={encryptionMethod} /> Password
-      </label>
-      <label>
-        <input
-          type="radio"
-          value="webauthn-prf"
-          bind:group={encryptionMethod}
-        /> WebAuthn PRF
       </label>
       <label>
         <input type="radio" value="none" bind:group={encryptionMethod} /> No encryption

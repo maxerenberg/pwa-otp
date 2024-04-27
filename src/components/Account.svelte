@@ -19,19 +19,15 @@
   import styles from "./Account.module.css";
 
   const accountID = getNormalizedPath().substring("/#/account/".length);
-  $: account = getAccountByID($settings, accountID);
-  let otpCode: number | undefined;
   let otpCodeStr = "";
+  $: account = getAccountByID($settings, accountID);
   $: calculator = CachingTOTPCalculator.factory(
     account ? $totpCalculators[account.id] : undefined,
   );
-  $: {
-    calculator?.calculate($now)?.then((code) => {
-      otpCode = code;
-      // TODO: fade animation when code changes
-      otpCodeStr = otpCodeToStr(code, account!.digits);
-    });
-  }
+  $: calculator?.calculate($now)?.then((code) => {
+    // TODO: fade animation when code changes
+    otpCodeStr = otpCodeToStr(code, account!.digits);
+  });
 </script>
 
 <IfSettings>

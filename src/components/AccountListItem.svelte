@@ -10,12 +10,10 @@
   import styles from "./AccountListItem.module.css";
 
   export let account: TOTPAccount;
-  let otpCode: number | undefined;
   let otpCodeStr = "";
   $: calculator = CachingTOTPCalculator.factory($totpCalculators[account.id]);
   $: {
     calculator?.calculate($now)?.then((code) => {
-      otpCode = code;
       // TODO: fade animation when code changes
       otpCodeStr = otpCodeToStr(code, account.digits);
     });
