@@ -20,6 +20,7 @@
   export let title: string;
   export let htmlTitle: string | undefined = undefined;
   export let backHref: string | undefined = undefined;
+  export let hideMenu: boolean = false;
 
   // TODO: use a non-drawer sidebar on desktop
   let drawerOpen = false;
@@ -33,6 +34,12 @@
 
   async function onClickToggleHideCodes() {
     await settings.toggleHideCodes();
+    drawerOpen = false;
+  }
+
+  function onClickRearrangeAccounts() {
+    // The drawer won't close on its own because the same component (Home)
+    // will get rendered
     drawerOpen = false;
   }
 </script>
@@ -52,7 +59,7 @@
         <AngleLeft class={styles.headingIcon} />
       </button>
     </Link>
-  {:else}
+  {:else if !hideMenu}
     <button
       class={styles.headingButton}
       aria-label="Toggle navigation"
@@ -80,7 +87,10 @@
     <!-- TODO: add real links -->
     <!-- TODO: hide first three links if account is not setup -->
     <ul role="list" class={styles.navList}>
-      <NavListItem href="#">
+      <NavListItem
+        href="/#/rearrange-accounts"
+        onClick={onClickRearrangeAccounts}
+      >
         <UserEditOutline />
         <span>Rearrange accounts</span>
       </NavListItem>

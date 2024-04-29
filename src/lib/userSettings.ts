@@ -331,11 +331,9 @@ function createSettingsStore() {
         return s;
       });
     },
-    async swapAccounts(i: number, j: number) {
+    async setAccounts(accounts: UnencryptedTOTPAccount[]) {
       await updateAsync(update, (s) => {
-        const temp = s.accounts[i];
-        s.accounts[i] = s.accounts[j];
-        s.accounts[j] = temp;
+        s.accounts = accounts;
         return s;
       });
     },

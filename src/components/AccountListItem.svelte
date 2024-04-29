@@ -10,7 +10,9 @@
   import styles from "./AccountListItem.module.css";
 
   export let account: TOTPAccount;
-  export let hideCode: boolean;
+  export let hideCode: boolean = false;
+  export let isRearranging: boolean = false;
+
   let otpCodeStr = "";
   $: calculator = CachingTOTPCalculator.factory($totpCalculators[account.id]);
   $: {
@@ -22,7 +24,25 @@
   $: otpCodeStrWidth = account.digits === 6 ? "4.25em" : "5.375em";
 </script>
 
-<li class={styles.item}>
+{#if isRearranging}
+  <div class={styles.itemInner}>
+    <div class={styles.grid}>
+      <!-- TODO: issuer logo -->
+      <UserCircleSolid class={styles.issuerLogo} />
+      <div class={styles.issuerAndName}>
+        <h4>{account.issuer}</h4>
+        <h4>{account.name}</h4>
+      </div>
+      <!-- empty div for bottom-left corner in grid -->
+      <div />
+    </div>
+    <div class={styles.dragHandleContainer}>
+      <div class={styles.dragHandle} />
+      <div class={styles.dragHandle} />
+      <div class={styles.dragHandle} />
+    </div>
+  </div>
+{:else}
   <Link class={styles.itemInner} href={`/#/account/${account.id}`}>
     <div class={styles.grid}>
       <!-- TODO: issuer logo -->
@@ -46,4 +66,4 @@
       <AngleRight class={styles.rightArrow} />
     </div>
   </Link>
-</li>
+{/if}

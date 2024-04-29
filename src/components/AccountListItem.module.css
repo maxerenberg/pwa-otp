@@ -56,12 +56,29 @@
   }
 }
 
-.rightArrowContainer {
+.rightArrowContainer,
+.dragHandleContainer {
   display: flex;
-  align-items: center;
-  margin-right: 0.5rem;
+  flex-flow: column nowrap;
+  justify-content: center;
+}
+
+.rightArrowContainer {
+  margin-right: 0.75rem;
 }
 
 .rightArrow {
   color: var(--app-section-icon-color);
+}
+
+.dragHandleContainer {
+  margin-right: 1rem;
+}
+
+.dragHandle {
+  width: 24px;
+  border-bottom: 1px solid var(--app-section-icon-color);
+  &:not(:first-child) {
+    margin-top: 4px;
+  }
 }

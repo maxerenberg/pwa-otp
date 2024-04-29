@@ -13,6 +13,7 @@
 
   const routes: Record<string, ComponentType> = {
     "/": Home,
+    "/#/rearrange-accounts": Home,
     "/#/setup/security": SetupSecurity,
     "/#/setup/security/password": SetupPassword,
     "/#/settings": Settings,

@@ -1,3 +1,5 @@
+import { readable } from "svelte/store";
+
 /**
  * The path of BASE_URL, without the trailing slash
  */
@@ -12,6 +14,7 @@ export const base = (() => {
   return base;
 })();
 
+// TODO: expose this as a store
 /**
  * Returns the full path in the current URL, including
  * the hash, after removing BASE_URL if it is set.
@@ -36,3 +39,17 @@ export function redirectTo(href: string) {
   }
   history.pushState(null, "", href);
 }
+
+export const normalizedPath = readable(
+  getNormalizedPath(),
+  function start(set) {
+    // Make sure we get the latest value when a component mounts
+    set(getNormalizedPath());
+    const onLocationChange = () => set(getNormalizedPath());
+    // This event is emitted from Router.svelte
+    window.addEventListener("locationchange", onLocationChange);
+    return function stop() {
+      window.removeEventListener("locationchange", onLocationChange);
+    };
+  },
+);

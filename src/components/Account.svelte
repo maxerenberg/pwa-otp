@@ -39,13 +39,11 @@
         href={`/#/account/${accountID}/settings`}
         class={`${headerStyles.topRightButton} text-decoration-none`}
         slot="top-right-button"
+        ariaLabel="Settings for this account"
       >
-        <button
-          class={headerStyles.headingButton}
-          aria-label="Settings for this account"
-        >
-          <CogOutline class={headerStyles.headingIcon} />
-        </button>
+        <CogOutline
+          class={`${headerStyles.headingIcon} ${headerStyles.headingButton}`}
+        />
       </Link>
     </Header>
     <main class={commonStyles.appMain}>

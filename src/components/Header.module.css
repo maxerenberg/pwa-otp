@@ -28,10 +28,19 @@
 
   .headingButton {
     border-radius: 0.5rem;
-    padding: 0.25rem;
     width: 2rem;
     height: 2rem;
     border: none;
+  }
+
+  .headingLink {
+    text-decoration: none;
+    font-weight: bold;
+  }
+
+  .headingButton,
+  .headingLink {
+    padding: 0.25rem;
     color: white;
     /* Disable the translucent gray box on iOS Safari when :active.
        See https://stackoverflow.com/a/33681490. */
