@@ -2,21 +2,15 @@
   // See https://vitejs.dev/guide/performance#avoid-barrel-files
   //import { Dialog } from "bits-ui";
   import * as Dialog from "../../node_modules/bits-ui/dist/bits/dialog";
-  import * as Separator from "../../node_modules/bits-ui/dist/bits/separator";
-  import {
-    fade,
-    fly,
-    type FadeParams,
-    type FlyParams,
-  } from "svelte/transition";
+  import { type FadeParams, type FlyParams } from "svelte/transition";
   import Header from "./Header.svelte";
+  import FormDialog from "./FormDialog.svelte";
   import IfSettings from "./IfSettings.svelte";
   import NoAccount from "./NoAccount.svelte";
   import AngleRight from "./icons/AngleRight.svelte";
   import { getNormalizedPath, redirectTo } from "../lib/routing";
   import { getAccountByID, settings } from "../lib/userSettings";
   import commonStyles from "./common.module.css";
-  import dialogStyles from "./Dialog.module.css";
   import styles from "./AccountSettings.module.css";
 
   const accountID = new RegExp("^/#/account/([^/]+)/settings$").exec(
@@ -55,8 +49,14 @@
     <Header title="Account settings" backHref={`/#/account/${accountID}`} />
     <!-- TODO: set max-width on inner content for desktop -->
     <main class={commonStyles.appMain}>
-      <Dialog.Root bind:open={renameAccountDialogOpen}>
+      <FormDialog
+        bind:open={renameAccountDialogOpen}
+        onSubmit={onSubmitRenameAccount}
+        submitButtonText="Done"
+        disabled={!inputIssuer}
+      >
         <Dialog.Trigger
+          slot="trigger"
           class={`${styles.section} ${styles.accountNameContainer}`}
         >
           <span>Account name</span>
@@ -65,80 +65,39 @@
             <AngleRight class={styles.arrow} />
           </div>
         </Dialog.Trigger>
-        <Dialog.Portal>
-          <Dialog.Overlay
-            transition={fade}
-            transitionConfig={fadeTransitionConfig}
-            class={dialogStyles.overlay}
-          />
-          <Dialog.Content
-            transition={fly}
-            transitionConfig={flyTransitionConfig}
-            class={`${dialogStyles.content} ${styles.dialogContent}`}
-          >
-            <Dialog.Title class={styles.dialogTitle}
-              >Rename account</Dialog.Title
-            >
-            <form on:submit={onSubmitRenameAccount}>
-              <div class={styles.dialogInputContainer}>
-                <!-- svelte-ignore a11y-autofocus -->
-                <input
-                  bind:value={inputIssuer}
-                  class={styles.dialogInput}
-                  autofocus
-                />
-              </div>
-              <Separator.Root class={styles.hSeparator} />
-              <div class={styles.dialogButtons}>
-                <button
-                  type="submit"
-                  class={styles.renameAccountSubmitButton}
-                  disabled={!inputIssuer}>Done</button
-                >
-              </div>
-            </form>
-          </Dialog.Content>
-        </Dialog.Portal>
-      </Dialog.Root>
-      <Dialog.Root>
+        <svelte:fragment slot="above-buttons">
+          <Dialog.Title class={styles.dialogTitle}>Rename account</Dialog.Title>
+          <div class={styles.dialogInputContainer}>
+            <!-- svelte-ignore a11y-autofocus -->
+            <input
+              bind:value={inputIssuer}
+              class={styles.dialogInput}
+              required
+              autofocus
+            />
+          </div>
+        </svelte:fragment>
+      </FormDialog>
+      <FormDialog
+        onSubmit={onSubmitRemoveAccount}
+        submitButtonText="Continue"
+        hasCancel
+      >
         <Dialog.Trigger
+          slot="trigger"
           class={`${styles.section} ${styles.removeAccountContainer}`}
         >
           Remove account
         </Dialog.Trigger>
-        <Dialog.Portal>
-          <Dialog.Overlay
-            transition={fade}
-            transitionConfig={fadeTransitionConfig}
-            class={dialogStyles.overlay}
-          />
-          <Dialog.Content
-            transition={fly}
-            transitionConfig={flyTransitionConfig}
-            class={`${dialogStyles.content} ${styles.dialogContent}`}
+        <svelte:fragment slot="above-buttons">
+          <Dialog.Title class={styles.dialogTitle}
+            >Are you sure you want to remove this account?</Dialog.Title
           >
-            <Dialog.Title class={styles.dialogTitle}
-              >Are you sure you want to remove this account?</Dialog.Title
-            >
-            <form on:submit={onSubmitRemoveAccount}>
-              <Dialog.Description class={styles.dialogDescription}>
-                This action is irreversible.
-              </Dialog.Description>
-              <Separator.Root class={styles.hSeparator} />
-              <div class={styles.dialogButtons}>
-                <Dialog.Close
-                  type="button"
-                  class={styles.removeAccountCancelButton}>Cancel</Dialog.Close
-                >
-                <Separator.Root class={styles.vSeparator} />
-                <button type="submit" class={styles.removeAccountSubmitButton}
-                  >Continue</button
-                >
-              </div>
-            </form>
-          </Dialog.Content>
-        </Dialog.Portal>
-      </Dialog.Root>
+          <Dialog.Description class={styles.dialogDescription}>
+            This action is irreversible.
+          </Dialog.Description>
+        </svelte:fragment>
+      </FormDialog>
     </main>
   {/if}
 </IfSettings>

@@ -17,3 +17,67 @@
     outline: none;
   }
 }
+
+.centerContent {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 0.5rem;
+  width: 300px;
+  max-width: 94%;
+  background-color: var(--app-main-bg);
+  --separator-color: rgba(0 0 0 / 25%);
+  --input-border-color: rgba(0 0 0 / 50%);
+
+  @media (prefers-color-scheme: dark) {
+    --separator-color: rgba(255 255 255 / 25%);
+    --input-border-color: rgba(255 255 255 / 50%);
+  }
+}
+
+.title {
+  font-weight: bold;
+  text-align: center;
+  line-height: 1.5rem;
+}
+
+.hSeparator {
+  height: 1px;
+  background-color: var(--separator-color);
+}
+
+.vSeparator {
+  width: 1px;
+  height: 100%;
+  background-color: var(--separator-color);
+  flex-shrink: 0;
+}
+
+.buttons {
+  display: flex;
+  /* Need a fixed height for the vSeparator */
+  height: 3rem;
+
+  > button {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+.primaryButton {
+  &:not(:disabled) {
+    color: var(--primary-600);
+    @media (prefers-color-scheme: dark) {
+      color: var(--primary-400);
+    }
+  }
+
+  &:disabled {
+    color: gray;
+  }
+}
+
+.dangerButton {
+  color: var(--danger);
+}
