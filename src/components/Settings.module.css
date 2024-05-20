@@ -10,11 +10,13 @@
 .sectionList {
   background-color: var(--app-section-bg);
   border-top: var(--app-section-border);
-  border-bottom: var(--app-section-border);
 
-  > li > a {
+  > li > * {
+    border-bottom: var(--app-section-border);
+    width: 100%;
+    height: 2.75rem;
     color: currentcolor;
-    padding: 0.5rem 1rem;
+    padding: 0 1rem;
     display: flex;
     align-items: center;
     justify-content: space-between;

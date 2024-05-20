@@ -3,7 +3,7 @@
   import Button from "./Button.svelte";
   import { settings, type EncryptedUserSettings } from "../lib/userSettings";
   import commonStyles from "./common.module.css";
-  import styles from "./PaswordInput.module.css";
+  import styles from "./PasswordInput.module.css";
 
   let password = "";
   let showIncorrectPasswordError = false;
@@ -30,6 +30,7 @@
 <main class={commonStyles.mainCenter}>
   <form on:submit={onSubmit}>
     <label for="current-password">Please enter your password:</label>
+    <!-- TODO: add button to show password (EyeSlashOutline) -->
     <input
       class={styles.input}
       id="current-password"

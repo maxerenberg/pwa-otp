@@ -147,23 +147,20 @@ function getStoredSettings(): UserSettings | ParseError | null {
   }
 }
 
-async function save(settings: UnencryptedUserSettings) {
+export async function encodeSettings(
+  settings: UnencryptedUserSettings,
+): Promise<EncodedUserSettings> {
   const { encryptionMethod } = settings;
-  let encodedSettings: EncodedUserSettings;
   if (encryptionMethod === "password") {
-    const encryptedSecrets: Uint8Array[] = new Array(settings.accounts.length);
-    const promises: Promise<void>[] = new Array(settings.accounts.length);
-    settings.accounts.forEach((account, i) => {
-      promises[i] = encrypt({
+    const promises = settings.accounts.map((account) =>
+      encrypt({
         key: settings.key,
         iv: settings.iv,
         data: account.secret,
-      }).then((encryptedData) => {
-        encryptedSecrets[i] = encryptedData;
-      });
-    });
-    await Promise.all(promises);
-    encodedSettings = {
+      }),
+    );
+    const encryptedSecrets = await Promise.all(promises);
+    return {
       version: SCHEMA_VERSION,
       hideCodes: settings.hideCodes,
       accounts: settings.accounts.map((account, i) => {
@@ -178,7 +175,7 @@ async function save(settings: UnencryptedUserSettings) {
       salt: base32encode(settings.salt),
     };
   } else if (encryptionMethod === "none") {
-    encodedSettings = {
+    return {
       version: SCHEMA_VERSION,
       hideCodes: settings.hideCodes,
       accounts: settings.accounts.map((account) => ({
@@ -193,6 +190,10 @@ async function save(settings: UnencryptedUserSettings) {
       `Invalid encryption method ${(settings as any).encryptionMethod}`,
     );
   }
+}
+
+async function save(settings: UnencryptedUserSettings) {
+  const encodedSettings = await encodeSettings(settings);
   localStorage.setItem(
     LOCALSTORAGE_SETTINGS_KEY,
     JSON.stringify(encodedSettings),
@@ -203,21 +204,11 @@ async function decryptSettings(
   settings: EncryptedUserSettings,
   password: string,
 ): Promise<UnencryptedUserSettings> {
-  const decryptedSecrets: Uint8Array[] = new Array(
-    settings.encryptedAccounts.length,
-  );
-  const promises: Promise<void>[] = new Array(
-    settings.encryptedAccounts.length,
-  );
   const key = await deriveKey(password, settings.salt);
-  settings.encryptedAccounts.forEach(({ encryptedSecret }, i) => {
-    promises[i] = decrypt({ key, iv: settings.iv, data: encryptedSecret }).then(
-      (decryptedData) => {
-        decryptedSecrets[i] = decryptedData;
-      },
-    );
-  });
-  await Promise.all(promises);
+  const promises = settings.encryptedAccounts.map(({ encryptedSecret }) =>
+    decrypt({ key, iv: settings.iv, data: encryptedSecret }),
+  );
+  const decryptedSecrets = await Promise.all(promises);
   return {
     encryptionMethod: "password",
     hideCodes: settings.hideCodes,
