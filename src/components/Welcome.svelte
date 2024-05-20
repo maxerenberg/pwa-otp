@@ -20,7 +20,6 @@
     </a>
     codes for multi-factor authentication.
   </p>
-  <!-- TODO: recommend user to install PWA. On iOS, make this mandatory. -->
   <!-- TODO: prompt user to import settings JSON file -->
   <Link href={getStartedHref} class="text-decoration-none">
     <Button class={commonStyles.largeBoldButton}>Get started</Button>

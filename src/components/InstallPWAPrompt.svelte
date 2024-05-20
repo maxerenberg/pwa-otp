@@ -4,6 +4,7 @@
   import Item from "./InstallPWAPromptItem.svelte";
   import Button from "./Button.svelte";
   import Link from "./Link.svelte";
+  import { redirectToSetupAfterPWAInstallation } from "../lib/pwa";
   import commonStyles from "./common.module.css";
   import styles from "./InstallPWAPrompt.module.css";
 
@@ -19,8 +20,7 @@
     if (matches[0] === "Firefox") return "Firefox";
     return undefined;
   })();
-  // TODO: detect transfer between browser and window (see https://web.dev/learn/pwa/detection)
-  // (Only works on Chromium-based browsers)
+  redirectToSetupAfterPWAInstallation();
 </script>
 
 <Header title="Authenticator" />
