@@ -1,0 +1,11 @@
+.buttons {
+  display: flex;
+
+  > * + * {
+    margin-left: 2em;
+  }
+
+  .button {
+    width: 5em;
+  }
+}

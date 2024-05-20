@@ -11,11 +11,13 @@
   import Account from "./Account.svelte";
   import AccountSettings from "./AccountSettings.svelte";
   import InstallPwaPrompt from "./InstallPWAPrompt.svelte";
+  import ConfirmSkipPwa from "./ConfirmSkipPWA.svelte";
 
   const routes: Record<string, ComponentType> = {
     "/": Home,
     "/#/rearrange-accounts": Home,
     "/#/setup/install-pwa": InstallPwaPrompt,
+    "/#/setup/confirm-skip-pwa": ConfirmSkipPwa,
     "/#/setup/security": SetupSecurity,
     "/#/setup/security/password": SetupPassword,
     "/#/settings": Settings,

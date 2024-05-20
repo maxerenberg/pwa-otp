@@ -3,6 +3,7 @@
   import Header from "./Header.svelte";
   import Item from "./InstallPWAPromptItem.svelte";
   import Button from "./Button.svelte";
+  import Link from "./Link.svelte";
   import commonStyles from "./common.module.css";
   import styles from "./InstallPWAPrompt.module.css";
 
@@ -56,8 +57,9 @@
       </p>
     </Item>
   </Accordion.Root>
-  <!-- TODO: go to confirmation page when clicked -->
-  <Button class={`${commonStyles.largeBoldButton} ${styles.skipButton}`}
-    >Skip</Button
-  >
+  <Link href="/#/setup/confirm-skip-pwa">
+    <Button class={`${commonStyles.largeBoldButton} ${styles.skipButton}`}
+      >Skip</Button
+    >
+  </Link>
 </main>
