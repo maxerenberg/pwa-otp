@@ -1,6 +1,4 @@
 <script lang="ts">
-  // See https://vitejs.dev/guide/performance#avoid-barrel-files
-  //import { Dialog } from "bits-ui";
   import * as Dialog from "../../node_modules/bits-ui/dist/bits/dialog";
   import { type FadeParams, type FlyParams } from "svelte/transition";
   import Header from "./Header.svelte";

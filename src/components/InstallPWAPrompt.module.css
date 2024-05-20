@@ -1,0 +1,46 @@
+.root {
+  width: 100%;
+}
+
+.item {
+  border-bottom: var(--app-section-border);
+  padding: 1rem;
+  text-align: left;
+
+  .trigger {
+    width: 100%;
+    display: flex;
+    flex: 1 0;
+    align-items: center;
+    justify-content: space-between;
+    font-weight: bold;
+
+    .arrow {
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    &[data-state="open"] .arrow {
+      transform: rotate(180deg);
+    }
+  }
+
+  .content {
+    margin-top: 1rem;
+  }
+
+  ol.content {
+    list-style-type: decimal;
+    padding-left: 1.125rem;
+
+    > li {
+      line-height: 1.25rem;
+      &:not(:first-child) {
+        margin-top: 0.5rem;
+      }
+    }
+  }
+}
+
+.skipButton {
+  width: 6em;
+}

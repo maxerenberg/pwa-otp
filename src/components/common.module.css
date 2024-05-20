@@ -5,7 +5,11 @@
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 1rem;
+  padding: 2rem 1rem;
+
+  @media (min-width: 768px) {
+    padding: 2rem;
+  }
 }
 
 /*
@@ -21,6 +25,11 @@
   flex: 1 0;
   display: flex;
   flex-flow: column nowrap;
+}
+
+.mainCenter,
+.appMain {
+  overflow-y: auto;
 }
 
 /* Copied from https://webaim.org/techniques/css/invisiblecontent/ */

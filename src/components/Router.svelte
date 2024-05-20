@@ -10,10 +10,12 @@
   import AddAccount from "./AddAccount.svelte";
   import Account from "./Account.svelte";
   import AccountSettings from "./AccountSettings.svelte";
+  import InstallPwaPrompt from "./InstallPWAPrompt.svelte";
 
   const routes: Record<string, ComponentType> = {
     "/": Home,
     "/#/rearrange-accounts": Home,
+    "/#/setup/install-pwa": InstallPwaPrompt,
     "/#/setup/security": SetupSecurity,
     "/#/setup/security/password": SetupPassword,
     "/#/settings": Settings,

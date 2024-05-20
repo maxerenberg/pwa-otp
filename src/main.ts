@@ -6,7 +6,3 @@ const app = new App({
 });
 
 export default app;
-
-if (typeof window !== "undefined") {
-  import("./pwa");
-}

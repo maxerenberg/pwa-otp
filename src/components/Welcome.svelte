@@ -3,6 +3,10 @@
   import Header from "./Header.svelte";
   import Link from "./Link.svelte";
   import commonStyles from "./common.module.css";
+
+  const getStartedHref = window.matchMedia("(display-mode: standalone)").matches
+    ? "/#/setup/security"
+    : "/#/setup/install-pwa";
 </script>
 
 <Header title="Authenticator" />
@@ -18,7 +22,7 @@
   </p>
   <!-- TODO: recommend user to install PWA. On iOS, make this mandatory. -->
   <!-- TODO: prompt user to import settings JSON file -->
-  <Link href="/#/setup/security" class="text-decoration-none">
+  <Link href={getStartedHref} class="text-decoration-none">
     <Button class={commonStyles.largeBoldButton}>Get started</Button>
   </Link>
 </main>
