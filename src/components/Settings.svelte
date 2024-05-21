@@ -40,13 +40,15 @@
 
 <IfSettings allowEncrypted>
   <main class={commonStyles.appMain}>
+    {#if $settings && settingsAreEncrypted($settings)}
+      <div class={styles.lockedWarning}>
+        NOTE: your account is currently locked, so some options are not shown.
+        Click <Link href="/">here</Link> to unlock it.
+      </div>
+    {/if}
     <section class={styles.section}>
       <h3 class={styles.sectionTitle}>ACCOUNT</h3>
-      <!-- TODO: add option to add/modify password (only if already unlocked) -->
       <!-- TODO: add option to upload settings -->
-      <!-- TODO: add "About" option which shows git commit hash used at build time
-           (see https://stackoverflow.com/q/70436753) -->
-      <!-- TODO: add option to check for updates -->
       <ul class={styles.sectionList}>
         <li>
           <Link href="/#/settings/delete-account" class="text-decoration-none">
@@ -70,6 +72,18 @@
             </Link>
           </li>
         {/if}
+      </ul>
+    </section>
+    <section class={styles.section}>
+      <h3 class={styles.sectionTitle}>SYSTEM</h3>
+      <!-- TODO: add option to check for updates -->
+      <ul class={styles.sectionList}>
+        <li>
+          <div>
+            <span>Commit hash</span>
+            <span>{import.meta.env.VITE_APP_COMMIT_HASH || "unknown"}</span>
+          </div>
+        </li>
       </ul>
     </section>
   </main>

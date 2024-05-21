@@ -1,3 +1,9 @@
+.lockedWarning {
+  margin: 1.5rem 0 0.5rem 0;
+  padding: 0 1rem;
+  line-height: 1.25rem;
+}
+
 .section {
   margin-top: 1rem;
 }
