@@ -284,6 +284,22 @@ function createSettingsStore() {
       await save(newSettings);
       set(newSettings);
     },
+    async addOrChangePassword(
+      oldSettings: UnencryptedUserSettings,
+      password: string,
+    ) {
+      const { salt, iv } = generateSaltAndIV();
+      const newSettings: UnencryptedUserSettings = {
+        hideCodes: oldSettings.hideCodes,
+        encryptionMethod: "password",
+        key: await deriveKey(password, salt),
+        iv,
+        salt,
+        accounts: oldSettings.accounts,
+      };
+      await save(newSettings);
+      set(newSettings);
+    },
     async decrypt(encryptedSettings: EncryptedUserSettings, password: string) {
       const decryptedSettings = await decryptSettings(
         encryptedSettings,

@@ -11,8 +11,8 @@
 
   async function onSubmit(ev: SubmitEvent) {
     ev.preventDefault();
-    // TODO: disable button while waiting
     try {
+      // FIXME: no error will be thrown if password was incorrect but user had no accounts
       await settings.decrypt(encryptedSettings, password);
     } catch (_err) {
       showIncorrectPasswordError = true;
@@ -30,7 +30,6 @@
 <main class={commonStyles.mainCenter}>
   <form on:submit={onSubmit}>
     <label for="current-password">Please enter your password:</label>
-    <!-- TODO: add button to show password (EyeSlashOutline) -->
     <input
       class={styles.input}
       id="current-password"
@@ -40,7 +39,7 @@
       on:input={onPasswordInput}
     />
     {#if showIncorrectPasswordError}
-      <div class="errorMessage">Incorrect password</div>
+      <div class={styles.formErrorMessage}>Incorrect password</div>
     {/if}
     <Button
       class={commonStyles.largeBoldButton}
@@ -49,11 +48,3 @@
     >
   </form>
 </main>
-
-<style>
-  .errorMessage {
-    text-align: center;
-    margin-bottom: 2rem;
-    color: var(--form-error-msg-color);
-  }
-</style>

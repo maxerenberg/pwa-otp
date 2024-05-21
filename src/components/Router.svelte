@@ -12,6 +12,7 @@
   import AccountSettings from "./AccountSettings.svelte";
   import InstallPwaPrompt from "./InstallPWAPrompt.svelte";
   import ConfirmSkipPwa from "./ConfirmSkipPWA.svelte";
+  import AddOrChangePassword from "./AddOrChangePassword.svelte";
 
   const routes: Record<string, ComponentType> = {
     "/": Home,
@@ -22,6 +23,7 @@
     "/#/setup/security/password": SetupPassword,
     "/#/settings": Settings,
     "/#/settings/delete-account": DeleteAccount,
+    "/#/settings/password": AddOrChangePassword,
     "/#/add-account": AddAccount,
   };
   const regexRoutes: [RegExp, ComponentType][] = [

@@ -61,6 +61,14 @@
               <AngleRight />
             </button>
           </li>
+          <li>
+            <Link href="/#/settings/password" class="text-decoration-none">
+              <span
+                >{$settings.encryptionMethod === "none" ? "Add" : "Change"} password</span
+              >
+              <AngleRight />
+            </Link>
+          </li>
         {/if}
       </ul>
     </section>
