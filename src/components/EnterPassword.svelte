@@ -7,6 +7,7 @@
 
   let password = "";
   let showIncorrectPasswordError = false;
+  export let backHref: string | undefined = undefined;
   export let encryptedSettings: EncryptedUserSettings;
 
   async function onSubmit(ev: SubmitEvent) {
@@ -25,7 +26,7 @@
   }
 </script>
 
-<Header title="Enter password" />
+<Header title="Enter password" {backHref} />
 
 <main class={commonStyles.mainCenter}>
   <form on:submit={onSubmit}>

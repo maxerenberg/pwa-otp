@@ -13,6 +13,7 @@
   import InstallPwaPrompt from "./InstallPWAPrompt.svelte";
   import ConfirmSkipPwa from "./ConfirmSkipPWA.svelte";
   import AddOrChangePassword from "./AddOrChangePassword.svelte";
+  import EnterPasswordPage from "./EnterPasswordPage.svelte";
 
   const routes: Record<string, ComponentType> = {
     "/": Home,
@@ -25,6 +26,7 @@
     "/#/settings/delete-account": DeleteAccount,
     "/#/settings/password": AddOrChangePassword,
     "/#/add-account": AddAccount,
+    "/#/enter-password": EnterPasswordPage,
   };
   const regexRoutes: [RegExp, ComponentType][] = [
     [new RegExp("^/#/account/[^/]+$"), Account],

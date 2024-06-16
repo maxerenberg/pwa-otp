@@ -43,7 +43,12 @@
     {#if $settings && settingsAreEncrypted($settings)}
       <div class={styles.lockedWarning}>
         NOTE: your account is currently locked, so some options are not shown.
-        Click <Link href="/">here</Link> to unlock it.
+        Click
+        <Link
+          href={`/?next=${encodeURIComponent("/#/settings")}#/enter-password`}
+        >
+          here
+        </Link> to unlock it.
       </div>
     {/if}
     <section class={styles.section}>

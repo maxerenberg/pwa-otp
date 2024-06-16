@@ -14,10 +14,10 @@ export const base = (() => {
   return base;
 })();
 
-// TODO: expose this as a store
 /**
  * Returns the full path in the current URL, including
  * the hash, after removing BASE_URL if it is set.
+ * Query parameters are removed if present.
  */
 export function getNormalizedPath(): string {
   let path = location.pathname;
@@ -38,6 +38,20 @@ export function redirectTo(href: string) {
     href = base + href;
   }
   history.pushState(null, "", href);
+}
+
+export function getQueryParams(): Partial<Record<string, string>> {
+  return location.search
+    .slice(1)
+    .split("&")
+    .reduce(
+      (acc, kv) => {
+        const [key, val] = kv.split("=");
+        acc[key] = decodeURIComponent(val);
+        return acc;
+      },
+      {} as Partial<Record<string, string>>,
+    );
 }
 
 export const normalizedPath = readable(
