@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount } from "svelte";
   import Header from "./Header.svelte";
   import Button from "./Button.svelte";
   import { settings, type EncryptedUserSettings } from "../lib/userSettings";
@@ -9,6 +10,10 @@
   let showIncorrectPasswordError = false;
   export let backHref: string | undefined = undefined;
   export let encryptedSettings: EncryptedUserSettings;
+
+  // The autofocus attribute doesn't work in Svelte
+  let ref: HTMLInputElement | null = null;
+  onMount(() => ref?.focus());
 
   async function onSubmit(ev: SubmitEvent) {
     ev.preventDefault();
@@ -38,6 +43,7 @@
       autocomplete="current-password"
       required
       on:input={onPasswordInput}
+      bind:this={ref}
     />
     {#if showIncorrectPasswordError}
       <div class={styles.formErrorMessage}>Incorrect password</div>

@@ -30,5 +30,11 @@
     svg {
       color: var(--app-section-icon-color);
     }
+
+    /* Align it with the chevrons */
+    .spinner {
+      position: relative;
+      left: -2px;
+    }
   }
 }

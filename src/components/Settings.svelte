@@ -3,6 +3,7 @@
   import Link from "./Link.svelte";
   import IfSettings from "./IfSettings.svelte";
   import AngleRight from "./icons/AngleRight.svelte";
+  import Spinner from "./Spinner.svelte";
   import {
     encodeSettings,
     settings,
@@ -11,27 +12,32 @@
   import commonStyles from "./common.module.css";
   import styles from "./Settings.module.css";
 
-  // TODO: disable button while waiting
+  let isDownloading = false;
   async function downloadSettings() {
-    if (!$settings || settingsAreEncrypted($settings)) {
+    if (!$settings || settingsAreEncrypted($settings) || isDownloading) {
       // Should never get here
       return;
     }
-    const encodedSettings = await encodeSettings($settings);
-    const payload = JSON.stringify(encodedSettings);
-    // The 'download' attribute does not work on iOS Safari 12.5
-    if ("download" in HTMLAnchorElement.prototype) {
-      const blob = new Blob([payload], { type: "application/json" });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = "settings.json";
-      link.click();
-    } else {
-      // This won't actually download the file, it'll just open it a new tab
-      // ... but I don't think there's anything else we can do here
-      const url = "data:application/json;base64," + btoa(payload);
-      window.open(url);
+    isDownloading = true;
+    try {
+      const encodedSettings = await encodeSettings($settings);
+      const payload = JSON.stringify(encodedSettings);
+      // The 'download' attribute does not work on iOS Safari 12.5
+      if ("download" in HTMLAnchorElement.prototype) {
+        const blob = new Blob([payload], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "settings.json";
+        link.click();
+      } else {
+        // This won't actually download the file, it'll just open it a new tab
+        // ... but I don't think there's anything else we can do here
+        const url = "data:application/json;base64," + btoa(payload);
+        window.open(url);
+      }
+    } finally {
+      isDownloading = false;
     }
   }
 </script>
@@ -63,9 +69,17 @@
         </li>
         {#if $settings && !settingsAreEncrypted($settings)}
           <li>
-            <button on:click={downloadSettings}>
+            <button on:click={downloadSettings} disabled={isDownloading}>
               <span>Download settings</span>
-              <AngleRight />
+              {#if isDownloading}
+                <Spinner
+                  stroke="var(--app-section-icon-color)"
+                  height="1.25em"
+                  class={styles.spinner}
+                />
+              {:else}
+                <AngleRight />
+              {/if}
             </button>
           </li>
           <li>
