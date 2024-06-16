@@ -8,17 +8,23 @@ function getNow(): number {
 }
 
 function createTimerStore() {
-  let intervalID = 0;
-  // FIXME: timer should fire when Date.now() % 1000 === 0
   return readable(getNow(), function start(set) {
     // Make sure we get the latest value when a component mounts
-    set(getNow());
-    intervalID = setInterval(() => {
+    const nowMillis = Date.now();
+    set(Math.floor(nowMillis / 1000));
+    const millisUntilNextSecond = 1000 - (nowMillis % 1000);
+    let intervalID = 0;
+    // Start the interval when the next second begins
+    let timeoutID = setTimeout(() => {
       set(getNow());
-    }, 1000);
+      intervalID = setInterval(() => {
+        set(getNow());
+      }, 1000);
+      timeoutID = 0;
+    }, millisUntilNextSecond);
     return function stop() {
-      clearInterval(intervalID);
-      intervalID = 0;
+      if (timeoutID) clearTimeout(timeoutID);
+      if (intervalID) clearInterval(intervalID);
     };
   });
 }
