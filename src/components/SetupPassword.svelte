@@ -5,7 +5,7 @@
   import { settings, settingsAreEncrypted } from "../lib/userSettings";
   import { redirectTo } from "../lib/routing";
   import commonStyles from "./common.module.css";
-  import styles from "./PasswordInput.module.css";
+  import styles from "./form.module.css";
 
   export let backHref = "/#/setup/security";
   export let nextHref = "/";
@@ -58,7 +58,7 @@
 <Header title="Create password" {backHref} />
 
 <main class={commonStyles.mainCenter}>
-  <form on:submit={onSubmit} class={styles.newPasswordForm}>
+  <form on:submit={onSubmit} class={styles.form}>
     <label for="new-password">Please create a new password:</label>
     <input
       class={styles.input}

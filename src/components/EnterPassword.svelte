@@ -4,7 +4,7 @@
   import Button from "./Button.svelte";
   import { settings, type EncryptedUserSettings } from "../lib/userSettings";
   import commonStyles from "./common.module.css";
-  import styles from "./PasswordInput.module.css";
+  import styles from "./form.module.css";
 
   let password = "";
   let showIncorrectPasswordError = false;

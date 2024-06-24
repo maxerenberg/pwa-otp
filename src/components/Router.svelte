@@ -14,6 +14,7 @@
   import ConfirmSkipPwa from "./ConfirmSkipPWA.svelte";
   import AddOrChangePassword from "./AddOrChangePassword.svelte";
   import EnterPasswordPage from "./EnterPasswordPage.svelte";
+  import UploadSettings from "./UploadSettings.svelte";
 
   const routes: Record<string, ComponentType> = {
     "/": Home,
@@ -25,6 +26,7 @@
     "/#/settings": Settings,
     "/#/settings/delete-account": DeleteAccount,
     "/#/settings/password": AddOrChangePassword,
+    "/#/settings/upload": UploadSettings,
     "/#/add-account": AddAccount,
     "/#/enter-password": EnterPasswordPage,
   };

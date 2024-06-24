@@ -8,14 +8,26 @@
   }
 }
 
-.newPasswordForm {
+.form {
   display: flex;
   flex-flow: column nowrap;
   align-items: center;
 }
 
-.formErrorMessage {
+.formErrorMessage,
+.formSuccessMessage {
   text-align: center;
   margin-bottom: 2rem;
+}
+
+.formErrorMessage {
   color: var(--form-error-msg-color);
+}
+
+.formSuccessMessage {
+  color: var(--form-success-msg-color);
+}
+
+.buttonSpinner {
+  margin-left: 0.5em;
 }

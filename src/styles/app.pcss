@@ -5,6 +5,8 @@
 @import "sanitize.css/assets.css";
 @import "sanitize.css/forms.css";
 
+/* TODO: use custom font (only need ASCII characters) */
+
 /*
   Copied from Tailwind's preflight. This prevents extra space from being
   added to the bottom of images. See https://stackoverflow.com/a/5804278.
@@ -79,6 +81,7 @@ button {
   --danger-bg-hover: #bb2d3b;
   --otp-code-color: var(--primary-600);
   --form-error-msg-color: #ff0000;
+  --form-success-msg-color: #009900;
 
   @media (prefers-color-scheme: dark) {
     --app-main-bg: #333;
@@ -89,6 +92,7 @@ button {
     --danger: #ff6666;
     --otp-code-color: var(--primary-300);
     --form-error-msg-color: #ff4444;
+    --form-success-msg-color: #44ff44;
   }
 }
 
