@@ -18,7 +18,6 @@
   async function onSubmit(ev: SubmitEvent) {
     ev.preventDefault();
     try {
-      // FIXME: no error will be thrown if password was incorrect but user had no accounts
       await settings.decrypt(encryptedSettings, password);
     } catch (_err) {
       showIncorrectPasswordError = true;

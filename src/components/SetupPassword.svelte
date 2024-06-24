@@ -2,6 +2,7 @@
   import { onMount } from "svelte";
   import Header from "./Header.svelte";
   import Button from "./Button.svelte";
+  import Spinner from "./Spinner.svelte";
   import { settings, settingsAreEncrypted } from "../lib/userSettings";
   import { redirectTo } from "../lib/routing";
   import commonStyles from "./common.module.css";
@@ -31,6 +32,9 @@
 
   async function onSubmit(ev: SubmitEvent) {
     ev.preventDefault();
+    if (inProgress) {
+      return;
+    }
     if (password !== password2) {
       showErrorMessage = true;
       return;
@@ -83,7 +87,12 @@
     <Button
       class={commonStyles.largeBoldButton}
       type="submit"
-      disabled={!password || !password2 || inProgress}>Continue</Button
+      disabled={!password || !password2 || inProgress}
     >
+      Continue
+      {#if inProgress}
+        <Spinner stroke="#666" height="1em" class={styles.buttonSpinner} />
+      {/if}
+    </Button>
   </form>
 </main>

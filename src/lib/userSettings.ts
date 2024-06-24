@@ -41,6 +41,7 @@ type EncodedUserSettings = {
       encryptionMethod: "password";
       salt: string; // for PBKDF2 (base32-encoded)
       iv: string; // for AES-GCM (base32-encoded)
+      encryptedSalt: string; // for verifying a password
       accounts: EncodedEncryptedTOTPAccount[];
     }
   | {
@@ -54,6 +55,7 @@ export type EncryptedUserSettings = {
   encryptionMethod: "password";
   iv: Uint8Array;
   salt: Uint8Array;
+  encryptedSalt: Uint8Array;
   encryptedAccounts: EncryptedTOTPAccount[];
 };
 export type UnencryptedUserSettings = {
@@ -123,7 +125,16 @@ function getStoredSettings(): UserSettings | ParseError | null {
         encryptedSecret,
       };
     }
-    return { encryptionMethod, iv, salt, encryptedAccounts, hideCodes };
+    const encryptedSalt = base32decode(encodedSettings.encryptedSalt);
+    if (encryptedSalt instanceof ParseError) return encryptedSalt;
+    return {
+      encryptionMethod,
+      iv,
+      salt,
+      encryptedSalt,
+      encryptedAccounts,
+      hideCodes,
+    };
   } else if (encryptionMethod === "none") {
     const accounts: UnencryptedTOTPAccount[] = new Array(
       encodedSettings.accounts.length,
@@ -160,6 +171,11 @@ export async function encodeSettings(
       }),
     );
     const encryptedSecrets = await Promise.all(promises);
+    const encryptedSalt = await encrypt({
+      key: settings.key,
+      iv: settings.iv,
+      data: settings.salt,
+    });
     return {
       version: SCHEMA_VERSION,
       hideCodes: settings.hideCodes,
@@ -173,6 +189,7 @@ export async function encodeSettings(
       encryptionMethod,
       iv: base32encode(settings.iv),
       salt: base32encode(settings.salt),
+      encryptedSalt: base32encode(encryptedSalt),
     };
   } else if (encryptionMethod === "none") {
     return {
@@ -200,6 +217,14 @@ async function save(settings: UnencryptedUserSettings) {
   );
 }
 
+function uint8ArraysAreEqual(arr1: Uint8Array, arr2: Uint8Array): boolean {
+  if (arr1.length !== arr2.length) return false;
+  for (let i = 0; i < arr1.length; i++) {
+    if (arr1[i] !== arr2[i]) return false;
+  }
+  return true;
+}
+
 async function decryptSettings(
   settings: EncryptedUserSettings,
   password: string,
@@ -209,6 +234,14 @@ async function decryptSettings(
     decrypt({ key, iv: settings.iv, data: encryptedSecret }),
   );
   const decryptedSecrets = await Promise.all(promises);
+  const decryptedSalt = await decrypt({
+    key,
+    iv: settings.iv,
+    data: settings.encryptedSalt,
+  });
+  if (!uint8ArraysAreEqual(decryptedSalt, settings.salt)) {
+    throw new Error("Decrypted salt does not match unencrypted salt");
+  }
   return {
     encryptionMethod: "password",
     hideCodes: settings.hideCodes,
