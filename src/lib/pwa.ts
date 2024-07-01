@@ -21,11 +21,15 @@ export function redirectToSetupAfterPWAInstallation() {
   onMount(() => {
     const listener = (ev: MediaQueryListEvent) => {
       if (ev.matches) {
-        redirectTo("/#/setup/security");
+        redirectTo("/#/setup/import");
       }
     };
     const match = window.matchMedia("(display-mode: standalone)");
     match.addEventListener("change", listener);
     return () => match.removeEventListener("change", listener);
   });
+}
+
+export function isInstalledAsPWA(): boolean {
+  return window.matchMedia("(display-mode: standalone)").matches;
 }

@@ -15,12 +15,14 @@
   import AddOrChangePassword from "./AddOrChangePassword.svelte";
   import EnterPasswordPage from "./EnterPasswordPage.svelte";
   import UploadSettings from "./UploadSettings.svelte";
+  import ImportSettings from "./ImportSettings.svelte";
 
   const routes: Record<string, ComponentType> = {
     "/": Home,
     "/#/rearrange-accounts": Home,
     "/#/setup/install-pwa": InstallPwaPrompt,
     "/#/setup/confirm-skip-pwa": ConfirmSkipPwa,
+    "/#/setup/import": ImportSettings,
     "/#/setup/security": SetupSecurity,
     "/#/setup/security/password": SetupPassword,
     "/#/settings": Settings,

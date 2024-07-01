@@ -89,17 +89,9 @@ export function settingsAreEncrypted(
 
 const LOCALSTORAGE_SETTINGS_KEY = "pwa-otp-settings";
 
-function getStoredSettings(): UserSettings | ParseError | null {
-  const settingsStr = localStorage.getItem(LOCALSTORAGE_SETTINGS_KEY);
-  if (!settingsStr) {
-    return null;
-  }
-  let encodedSettings: EncodedUserSettings;
-  try {
-    encodedSettings = JSON.parse(settingsStr);
-  } catch (err) {
-    return new ParseError("Invalid JSON");
-  }
+function decodeSettings(
+  encodedSettings: EncodedUserSettings,
+): UserSettings | ParseError {
   // TODO: validate schema using Zod
   if (encodedSettings.version !== SCHEMA_VERSION) {
     return new ParseError(
@@ -158,6 +150,20 @@ function getStoredSettings(): UserSettings | ParseError | null {
   }
 }
 
+function getStoredSettings(): UserSettings | ParseError | null {
+  const settingsStr = localStorage.getItem(LOCALSTORAGE_SETTINGS_KEY);
+  if (!settingsStr) {
+    return null;
+  }
+  let encodedSettings: EncodedUserSettings;
+  try {
+    encodedSettings = JSON.parse(settingsStr);
+  } catch (err) {
+    return new ParseError("Invalid JSON");
+  }
+  return decodeSettings(encodedSettings);
+}
+
 export async function encodeSettings(
   settings: UnencryptedUserSettings,
 ): Promise<EncodedUserSettings> {
@@ -209,12 +215,16 @@ export async function encodeSettings(
   }
 }
 
-async function save(settings: UnencryptedUserSettings) {
-  const encodedSettings = await encodeSettings(settings);
+function saveEncoded(encodedSettings: EncodedUserSettings) {
   localStorage.setItem(
     LOCALSTORAGE_SETTINGS_KEY,
     JSON.stringify(encodedSettings),
   );
+}
+
+async function save(settings: UnencryptedUserSettings) {
+  const encodedSettings = await encodeSettings(settings);
+  saveEncoded(encodedSettings);
 }
 
 function uint8ArraysAreEqual(arr1: Uint8Array, arr2: Uint8Array): boolean {
@@ -295,7 +305,7 @@ function createSettingsStore() {
   );
   return {
     subscribe,
-    async createWithoutEncyprtion() {
+    async createWithoutEncryption() {
       const newSettings: UnencryptedUserSettings = {
         encryptionMethod: "none",
         hideCodes: false,
@@ -316,6 +326,16 @@ function createSettingsStore() {
       };
       await save(newSettings);
       set(newSettings);
+    },
+    importSettings(imported: unknown) {
+      // TODO: validate schema with Zod
+      const encoded = imported as EncodedUserSettings;
+      const decoded = decodeSettings(encoded);
+      if (decoded instanceof ParseError) {
+        throw decoded;
+      }
+      saveEncoded(encoded);
+      set(decoded);
     },
     async addOrChangePassword(
       oldSettings: UnencryptedUserSettings,

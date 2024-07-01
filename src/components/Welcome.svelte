@@ -2,10 +2,11 @@
   import Button from "./Button.svelte";
   import Header from "./Header.svelte";
   import Link from "./Link.svelte";
+  import { isInstalledAsPWA } from "../lib/pwa";
   import commonStyles from "./common.module.css";
 
-  const getStartedHref = window.matchMedia("(display-mode: standalone)").matches
-    ? "/#/setup/security"
+  const getStartedHref = isInstalledAsPWA()
+    ? "/#/setup/import"
     : "/#/setup/install-pwa";
 </script>
 
@@ -20,7 +21,6 @@
     </a>
     codes for multi-factor authentication.
   </p>
-  <!-- TODO: prompt user to import settings JSON file -->
   <Link href={getStartedHref} class="text-decoration-none">
     <Button class={commonStyles.largeBoldButton}>Get started</Button>
   </Link>

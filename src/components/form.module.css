@@ -30,4 +30,5 @@
 
 .buttonSpinner {
   margin-left: 0.5em;
+  flex-shrink: 0;
 }

@@ -24,7 +24,7 @@
         >Back</Button
       >
     </Link>
-    <Link href="/#/setup/security">
+    <Link href="/#/setup/import">
       <Button
         class={`${commonStyles.largeBoldButton} ${styles.button}`}
         theme="danger">Yes</Button

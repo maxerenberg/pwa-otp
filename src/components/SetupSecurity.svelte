@@ -12,7 +12,7 @@
     ev.preventDefault();
     if (encryptionMethod === "none") {
       // TODO: disable button while waiting
-      await settings.createWithoutEncyprtion();
+      await settings.createWithoutEncryption();
       redirectTo("/");
     } else {
       redirectTo("/#/setup/security/password");
@@ -20,14 +20,14 @@
   }
 </script>
 
-<Header title="Setup security" backHref="/" />
+<Header title="Setup security" backHref="/#/setup/import" />
 
 <main class={commonStyles.mainCenter}>
   <p>
     This application stores TOTP secrets in
     <a
       href="https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage"
-      >localStorage</a
+      target="_blank">localStorage</a
     >. How would you like to encrypt these secrets?
   </p>
   <form on:submit={onSubmit} class={styles.form}>
