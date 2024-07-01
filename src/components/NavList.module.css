@@ -1,0 +1,59 @@
+.nav {
+  @media (max-width: 767.98px) {
+    &:not(.inDrawer) {
+      display: none;
+    }
+  }
+
+  background-color: var(--nav-bg);
+
+  @media (prefers-color-scheme: dark) {
+    border-right: var(--app-section-border);
+  }
+}
+
+.list {
+  @media (min-width: 768px) {
+    margin: 1rem 0.5rem;
+  }
+
+  > li {
+    border-radius: 0.5rem;
+
+    /* :is and :where are not supported on iOS Safari 12.5 */
+    &:hover,
+    &:active {
+      background-color: var(--app-main-bg);
+    }
+
+    > a {
+      text-decoration-line: none;
+    }
+
+    > button {
+      width: 100%;
+    }
+
+    > a,
+    > button {
+      color: currentcolor;
+      display: flex;
+      align-items: center;
+      padding: 0.75rem;
+
+      > svg {
+        margin-right: 0.75rem;
+        color: #555;
+
+        @media (prefers-color-scheme: dark) {
+          color: #bbb;
+        }
+      }
+
+      > span {
+        position: relative;
+        top: -1px;
+      }
+    }
+  }
+}

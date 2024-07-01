@@ -9,6 +9,12 @@
   @media (min-width: 768px) {
     height: 3.5rem;
     --padding-x: 1rem;
+    /* See grid-template-columns in app.pcss */
+    grid-column: 1 / 3;
+
+    .toggleNavButton {
+      display: none;
+    }
   }
 
   .heading {
@@ -31,6 +37,11 @@
     width: 2rem;
     height: 2rem;
     border: none;
+
+    @media (min-width: 768px) {
+      width: 2.5rem;
+      height: 2.5rem;
+    }
   }
 
   .headingLink {
@@ -63,47 +74,5 @@
   @media (min-width: 768px) {
     width: 2rem;
     height: 2rem;
-  }
-}
-
-.navList {
-  > li {
-    border-radius: 0.5rem;
-
-    /* :is and :where are not supported on iOS Safari 12.5 */
-    &:hover,
-    &:active {
-      background-color: var(--app-main-bg);
-    }
-
-    > a {
-      text-decoration-line: none;
-    }
-
-    > button {
-      width: 100%;
-    }
-
-    > a,
-    > button {
-      color: currentcolor;
-      display: flex;
-      align-items: center;
-      padding: 0.75rem;
-
-      > svg {
-        margin-right: 0.75rem;
-        color: #555;
-
-        @media (prefers-color-scheme: dark) {
-          color: #bbb;
-        }
-      }
-
-      > span {
-        position: relative;
-        top: -1px;
-      }
-    }
   }
 }

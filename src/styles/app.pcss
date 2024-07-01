@@ -1,5 +1,6 @@
 /* Write your global styles here, in PostCSS syntax */
 
+/* TODO: modify these stylesheets to account for missing :is and :where in iOS Safari */
 @import "./reset.css";
 @import "sanitize.css";
 @import "sanitize.css/assets.css";
@@ -82,6 +83,7 @@ button {
   --otp-code-color: var(--primary-600);
   --form-error-msg-color: #ff0000;
   --form-success-msg-color: #009900;
+  --nav-bg: #ddd;
 
   @media (prefers-color-scheme: dark) {
     --app-main-bg: #333;
@@ -93,22 +95,27 @@ button {
     --otp-code-color: var(--primary-300);
     --form-error-msg-color: #ff4444;
     --form-success-msg-color: #44ff44;
+    --nav-bg: unset;
   }
 }
 
 #app {
   min-height: 100vh;
-  display: flex;
-  flex-flow: column nowrap;
-}
 
-/*
-  Workaround for 100vh not working on iOS Safari.
-  Copied from https://www.npmjs.com/package/@rvxlab/tailwind-plugin-ios-full-height.
-*/
-@supports (-webkit-touch-callout: none) {
-  #app {
+  /*
+    Workaround for 100vh not working on iOS Safari.
+    Copied from https://www.npmjs.com/package/@rvxlab/tailwind-plugin-ios-full-height.
+  */
+  @supports (-webkit-touch-callout: none) {
     min-height: -webkit-fill-available;
+  }
+
+  display: grid;
+  /* header, main */
+  grid-template-rows: auto 1fr;
+
+  @media (min-width: 768px) {
+    grid-template-columns: 270px 1fr;
   }
 }
 
