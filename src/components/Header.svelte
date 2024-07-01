@@ -7,6 +7,8 @@
   import BarsSolid from "./icons/BarsSolid.svelte";
   import Link from "./Link.svelte";
   import NavList from "./NavList.svelte";
+  import { normalizedPath } from "../lib/routing";
+  import { settings, settingsAreEncrypted } from "../lib/userSettings";
   import commonStyles from "./common.module.css";
   import styles from "./Header.module.css";
 
@@ -15,7 +17,6 @@
   export let backHref: string | undefined = undefined;
   export let hideMenu: boolean = false;
 
-  // TODO: use a non-drawer sidebar on desktop
   let drawerOpen = false;
   function onClickMenuButton() {
     drawerOpen = true;
@@ -31,6 +32,9 @@
     // will get rendered
     drawerOpen = false;
   }
+
+  $: isShowingAccounts =
+    !!$settings && !settingsAreEncrypted($settings) && $normalizedPath === "/";
 </script>
 
 <svelte:head>
@@ -40,7 +44,6 @@
 <header class={`${styles.header} ${backHref ? styles.centerTitle : ""}`}>
   {#if backHref}
     <Link href={backHref}>
-      <!-- TODO: move this up a bit (looks off-center on desktop) -->
       <button
         class={styles.headingButton}
         aria-label="Back"
@@ -73,7 +76,7 @@
 
 <Drawer bind:open={drawerOpen}>
   <Dialog.Title class={commonStyles.srOnly}>Navigation</Dialog.Title>
-  <NavList {closeDrawer} />
+  <NavList {closeDrawer} {isShowingAccounts} />
 </Drawer>
 
-<NavList />
+<NavList {isShowingAccounts} />

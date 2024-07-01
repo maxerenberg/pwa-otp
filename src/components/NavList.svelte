@@ -11,6 +11,7 @@
 
   export let closeDrawer: (() => void) | null = null;
   const inDrawer = !!closeDrawer;
+  export let isShowingAccounts: boolean;
 
   async function onClickToggleHideCodes() {
     await settings.toggleHideCodes();
@@ -26,23 +27,24 @@
 >
   <!-- TODO: activeUrl -->
   <!-- TODO: add real links -->
-  <!-- TODO: hide first three links if account is not setup -->
   <ul role="list" class={styles.list}>
-    <NavListItem href="/#/rearrange-accounts" onClick={closeDrawer}>
-      <UserEditOutline />
-      <span>Rearrange accounts</span>
-    </NavListItem>
-    <li>
-      <button on:click={onClickToggleHideCodes}>
-        {#if $settings?.hideCodes}
-          <EyeOutline />
-          <span>Show codes</span>
-        {:else}
-          <EyeSlashOutline />
-          <span>Hide codes</span>
-        {/if}
-      </button>
-    </li>
+    {#if isShowingAccounts}
+      <NavListItem href="/#/rearrange-accounts" onClick={closeDrawer}>
+        <UserEditOutline />
+        <span>Rearrange accounts</span>
+      </NavListItem>
+      <li>
+        <button on:click={onClickToggleHideCodes}>
+          {#if $settings?.hideCodes}
+            <EyeOutline />
+            <span>Show codes</span>
+          {:else}
+            <EyeSlashOutline />
+            <span>Hide codes</span>
+          {/if}
+        </button>
+      </li>
+    {/if}
     <NavListItem href="/#/settings">
       <CogOutline />
       <span>Settings</span>
