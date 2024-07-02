@@ -57,7 +57,7 @@
       </p>
     </Item>
   </Accordion.Root>
-  <Link href="/#/setup/confirm-skip-pwa">
+  <Link href="/#/setup/confirm-skip-pwa" class="text-decoration-none">
     <Button class={`${commonStyles.largeBoldButton} ${styles.skipButton}`}
       >Skip</Button
     >

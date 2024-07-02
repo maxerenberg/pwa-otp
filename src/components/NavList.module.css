@@ -1,14 +1,14 @@
-.nav {
+.nav:not(.inDrawer) {
   @media (max-width: 767.98px) {
-    &:not(.inDrawer) {
-      display: none;
-    }
+    display: none;
   }
 
-  background-color: var(--nav-bg);
+  @media (min-width: 768px) {
+    background-color: var(--nav-bg);
 
-  @media (prefers-color-scheme: dark) {
-    border-right: var(--app-section-border);
+    @media (prefers-color-scheme: dark) {
+      border-right: var(--app-section-border);
+    }
   }
 }
 

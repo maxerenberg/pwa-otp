@@ -14,6 +14,14 @@ export const { needRefresh, updateServiceWorker } = useRegisterSW({
   },
 });
 
+export async function updateServiceWorkerWithoutReload() {
+  const registration = await navigator.serviceWorker.getRegistration();
+  if (!registration) {
+    throw new Error("Service worker is not registered");
+  }
+  await registration.update();
+}
+
 export function redirectToSetupAfterPWAInstallation() {
   // See https://web.dev/learn/pwa/detection
   // Note: this does not work on iOS due to storage isolation (user will be

@@ -19,12 +19,12 @@
     your home screen?
   </p>
   <div class={styles.buttons}>
-    <Link href="/#/setup/install-pwa">
+    <Link href="/#/setup/install-pwa" class="text-decoration-none">
       <Button class={`${commonStyles.largeBoldButton} ${styles.button}`}
         >Back</Button
       >
     </Link>
-    <Link href="/#/setup/import">
+    <Link href="/#/setup/import" class="text-decoration-none">
       <Button
         class={`${commonStyles.largeBoldButton} ${styles.button}`}
         theme="danger">Yes</Button

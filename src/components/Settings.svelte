@@ -4,6 +4,7 @@
   import IfSettings from "./IfSettings.svelte";
   import AngleRight from "./icons/AngleRight.svelte";
   import Spinner from "./Spinner.svelte";
+  import { updateServiceWorkerWithoutReload } from "../lib/pwa";
   import {
     encodeSettings,
     settings,
@@ -38,6 +39,16 @@
       }
     } finally {
       isDownloading = false;
+    }
+  }
+
+  let isCheckingForUpdates = false;
+  async function checkForUpdates() {
+    isCheckingForUpdates = true;
+    try {
+      await updateServiceWorkerWithoutReload();
+    } finally {
+      isCheckingForUpdates = false;
     }
   }
 </script>
@@ -100,8 +111,21 @@
     </section>
     <section class={styles.section}>
       <h3 class={styles.sectionTitle}>SYSTEM</h3>
-      <!-- TODO: add option to check for updates -->
       <ul class={styles.sectionList}>
+        <li>
+          <button on:click={checkForUpdates} disabled={isCheckingForUpdates}>
+            <span>Check for updates</span>
+            {#if isCheckingForUpdates}
+              <Spinner
+                stroke="var(--app-section-icon-color)"
+                height="1.25em"
+                class={styles.spinner}
+              />
+            {:else}
+              <AngleRight />
+            {/if}
+          </button>
+        </li>
         <li>
           <div>
             <span>Commit hash</span>
