@@ -1,9 +1,9 @@
 <script lang="ts">
   import { CachingTOTPCalculator, type TOTPAccount } from "../lib/totp";
   import Link from "./Link.svelte";
-  import UserCircleSolid from "./icons/UserCircleSolid.svelte";
   import AngleRight from "./icons/AngleRight.svelte";
   import TimerCircle from "./TimerCircle.svelte";
+  import IssuerLogo from "./IssuerLogo.svelte";
   import { now } from "../lib/timer";
   import { otpCodeToStr } from "../lib/totp";
   import { totpCalculators } from "../lib/userSettings";
@@ -27,8 +27,11 @@
 {#if isRearranging}
   <div class={styles.itemInner}>
     <div class={styles.grid}>
-      <!-- TODO: issuer logo -->
-      <UserCircleSolid class={styles.issuerLogo} />
+      <IssuerLogo
+        issuer={account.issuer}
+        name={account.name}
+        class={styles.issuerLogo}
+      />
       <div class={styles.issuerAndName}>
         <h4>{account.issuer}</h4>
         <h4>{account.name}</h4>
@@ -45,8 +48,11 @@
 {:else}
   <Link class={styles.itemInner} href={`/#/account/${account.id}`}>
     <div class={styles.grid}>
-      <!-- TODO: issuer logo -->
-      <UserCircleSolid class={styles.issuerLogo} />
+      <IssuerLogo
+        issuer={account.issuer}
+        name={account.name}
+        class={styles.issuerLogo}
+      />
       <div class={styles.issuerAndName}>
         <h4>{account.issuer}</h4>
         <h4>{account.name}</h4>

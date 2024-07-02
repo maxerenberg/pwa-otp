@@ -13,7 +13,7 @@
     settings,
     totpCalculators,
   } from "../lib/userSettings";
-  import UserCircleSolid from "./icons/UserCircleSolid.svelte";
+  import IssuerLogo from "./IssuerLogo.svelte";
   import commonStyles from "./common.module.css";
   import headerStyles from "./Header.module.css";
   import styles from "./Account.module.css";
@@ -48,8 +48,11 @@
     </Header>
     <main class={commonStyles.appMain}>
       <div class={styles.banner}>
-        <!-- TODO: issuer logo -->
-        <UserCircleSolid class={styles.issuerLogo} />
+        <IssuerLogo
+          issuer={account.issuer}
+          name={account.name}
+          class={styles.issuerLogo}
+        />
         <div class={styles.issuerAndName}>
           <h4 class={styles.issuer}>{account.issuer}</h4>
           <h4 class={styles.name}>{account.name}</h4>

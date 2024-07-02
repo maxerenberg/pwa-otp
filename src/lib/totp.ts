@@ -62,8 +62,8 @@ export type Digits = 6 | 8;
 
 export type TOTPAccount = {
   secret: Uint8Array; // unencrypted
-  name: string;
-  issuer?: string;
+  name: string; // e.g. "jdoe@gmail.com"
+  issuer: string; // e.g. "Google"
   algorithm: HashAlgorithm;
   digits: Digits;
   id: string;
