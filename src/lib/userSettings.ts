@@ -1,4 +1,5 @@
 import { derived, writable, type Updater } from "svelte/store";
+import { z } from "zod";
 import {
   base32decode,
   base32encode,
@@ -6,49 +7,48 @@ import {
   ParseError,
   TOTPCalculator,
   type TOTPAccount as UnencryptedTOTPAccount,
+  TOTPAccount_schema as UnencryptedTOTPAccount_schema,
 } from "./totp";
 import { decrypt, deriveKey, encrypt, generateSaltAndIV } from "./encryption";
 
 // TODO: support WebAuthn PRF
-export type EncryptionMethod = "password" | "none";
-type EncryptedTOTPAccount = Omit<UnencryptedTOTPAccount, "secret"> & {
-  encryptedSecret: Uint8Array;
-};
+const EncryptionMethod_schema = z.enum(["password", "none"]);
+export type EncryptionMethod = z.infer<typeof EncryptionMethod_schema>;
+// Replace 'secret: Uint8Array' with 'encryptedSecret: Uint8Array'
+const EncryptedTOTPAccount_schema = UnencryptedTOTPAccount_schema.omit({
+  secret: true,
+}).merge(z.object({ encryptedSecret: z.instanceof(Uint8Array) }));
+type EncryptedTOTPAccount = z.infer<typeof EncryptedTOTPAccount_schema>;
 
 const SCHEMA_VERSION = 1;
-type EncodedUnencryptedTOTPAccount = Omit<
-  UnencryptedTOTPAccount,
-  "id" | "secret"
-> & {
-  id?: string;
-  secret: string;
-};
-type EncodedEncryptedTOTPAccount = Omit<
-  EncryptedTOTPAccount,
-  "id" | "encryptedSecret"
-> & {
-  id?: string;
-  encryptedSecret: string;
-};
-type EncodedTOTPAccount =
-  | EncodedUnencryptedTOTPAccount
-  | EncodedEncryptedTOTPAccount;
-type EncodedUserSettings = {
-  version: number;
-  hideCodes: boolean;
-} & (
-  | {
-      encryptionMethod: "password";
-      salt: string; // for PBKDF2 (base32-encoded)
-      iv: string; // for AES-GCM (base32-encoded)
-      encryptedSalt: string; // for verifying a password
-      accounts: EncodedEncryptedTOTPAccount[];
-    }
-  | {
-      encryptionMethod: "none";
-      accounts: EncodedUnencryptedTOTPAccount[];
-    }
+// Replace 'secret: Uint8Array' with 'secret: string'
+const EncodedUnencryptedTOTPAccount_schema =
+  UnencryptedTOTPAccount_schema.merge(z.object({ secret: z.string() }));
+// Replace 'encryptedSecret: Uint8Array' with 'encryptedSecret: string'
+const EncodedEncryptedTOTPAccount_schema = EncryptedTOTPAccount_schema.merge(
+  z.object({ encryptedSecret: z.string() }),
 );
+const EncodedUserSettings_schema = z
+  .object({
+    version: z.number(),
+    hideCodes: z.boolean(),
+  })
+  .and(
+    z.union([
+      z.object({
+        encryptionMethod: z.literal("password"),
+        salt: z.string(), // for PBKDF2 (base32-encoded)
+        iv: z.string(), // for AES-GCM (base32-encoded)
+        encryptedSalt: z.string(), // for verifying a password
+        accounts: z.array(EncodedEncryptedTOTPAccount_schema),
+      }),
+      z.object({
+        encryptionMethod: z.literal("none"),
+        accounts: z.array(EncodedUnencryptedTOTPAccount_schema),
+      }),
+    ]),
+  );
+type EncodedUserSettings = z.infer<typeof EncodedUserSettings_schema>;
 
 export type EncryptedUserSettings = {
   hideCodes: boolean;
@@ -74,10 +74,6 @@ export type UnencryptedUserSettings = {
 );
 export type UserSettings = EncryptedUserSettings | UnencryptedUserSettings;
 
-function getEncodedAccountID(encodedAccount: EncodedTOTPAccount): string {
-  return encodedAccount.id ?? generateAccountID();
-}
-
 export function settingsAreEncrypted(
   settings: UserSettings,
 ): settings is EncryptedUserSettings {
@@ -89,10 +85,12 @@ export function settingsAreEncrypted(
 
 const LOCALSTORAGE_SETTINGS_KEY = "pwa-otp-settings";
 
-function decodeSettings(
-  encodedSettings: EncodedUserSettings,
-): UserSettings | ParseError {
-  // TODO: validate schema using Zod
+function decodeSettings(encodedSettings_: unknown): UserSettings | ParseError {
+  const parseResult = EncodedUserSettings_schema.safeParse(encodedSettings_);
+  if (!parseResult.success) {
+    return new ParseError(parseResult.error.message);
+  }
+  const encodedSettings = parseResult.data;
   if (encodedSettings.version !== SCHEMA_VERSION) {
     return new ParseError(
       `Version mismatch: expected ${SCHEMA_VERSION}, got ${encodedSettings.version}`,
@@ -113,7 +111,6 @@ function decodeSettings(
       if (encryptedSecret instanceof ParseError) return encryptedSecret;
       encryptedAccounts[i] = {
         ...encodedAccount,
-        id: getEncodedAccountID(encodedAccount),
         encryptedSecret,
       };
     }
@@ -137,7 +134,6 @@ function decodeSettings(
       if (secret instanceof ParseError) return secret;
       accounts[i] = {
         ...encodedAccount,
-        id: getEncodedAccountID(encodedAccount),
         secret,
       };
     }
@@ -155,7 +151,7 @@ function getStoredSettings(): UserSettings | ParseError | null {
   if (!settingsStr) {
     return null;
   }
-  let encodedSettings: EncodedUserSettings;
+  let encodedSettings: unknown;
   try {
     encodedSettings = JSON.parse(settingsStr);
   } catch (err) {
@@ -328,8 +324,11 @@ function createSettingsStore() {
       set(newSettings);
     },
     importSettings(imported: unknown) {
-      // TODO: validate schema with Zod
-      const encoded = imported as EncodedUserSettings;
+      const parseResult = EncodedUserSettings_schema.safeParse(imported);
+      if (!parseResult.success) {
+        throw parseResult.error;
+      }
+      const encoded = parseResult.data;
       const decoded = decodeSettings(encoded);
       if (decoded instanceof ParseError) {
         throw decoded;

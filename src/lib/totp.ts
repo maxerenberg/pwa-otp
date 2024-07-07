@@ -1,4 +1,5 @@
 import { nanoid } from "nanoid";
+import { z } from "zod";
 
 export class ParseError extends Error {}
 
@@ -58,16 +59,18 @@ export function base32encode(arr: Uint8Array): string {
 
 export const hashAlgorithms = ["SHA1", "SHA256", "SHA512"] as const;
 export type HashAlgorithm = (typeof hashAlgorithms)[number];
-export type Digits = 6 | 8;
+const Digits_schema = z.union([z.literal(6), z.literal(8)]);
+export type Digits = z.infer<typeof Digits_schema>;
 
-export type TOTPAccount = {
-  secret: Uint8Array; // unencrypted
-  name: string; // e.g. "jdoe@gmail.com"
-  issuer: string; // e.g. "Google"
-  algorithm: HashAlgorithm;
-  digits: Digits;
-  id: string;
-};
+export const TOTPAccount_schema = z.object({
+  secret: z.instanceof(Uint8Array), // unencrypted
+  name: z.string(), // e.g. "jdoe@gmail.com"
+  issuer: z.string(), // e.g. "Google"
+  algorithm: z.enum(hashAlgorithms),
+  digits: Digits_schema,
+  id: z.string(),
+});
+export type TOTPAccount = z.infer<typeof TOTPAccount_schema>;
 
 export function generateAccountID(): string {
   return nanoid(10);

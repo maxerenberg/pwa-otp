@@ -1,5 +1,8 @@
 # Scripts
 
+**UPDATE**: this does not work when the PWA is served over HTTPS and the
+upload server is served over plain HTTP. Also see https://stackoverflow.com/a/71109928.
+
 ## upload-server
 
 The upload-server script runs a small HTTP server which accepts JSON file
