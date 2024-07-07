@@ -85,10 +85,10 @@ export function settingsAreEncrypted(
 
 const LOCALSTORAGE_SETTINGS_KEY = "pwa-otp-settings";
 
-function decodeSettings(encodedSettings_: unknown): UserSettings | ParseError {
+function decodeSettings(encodedSettings_: unknown): UserSettings | Error {
   const parseResult = EncodedUserSettings_schema.safeParse(encodedSettings_);
   if (!parseResult.success) {
-    return new ParseError(parseResult.error.message);
+    return parseResult.error;
   }
   const encodedSettings = parseResult.data;
   if (encodedSettings.version !== SCHEMA_VERSION) {
@@ -146,7 +146,7 @@ function decodeSettings(encodedSettings_: unknown): UserSettings | ParseError {
   }
 }
 
-function getStoredSettings(): UserSettings | ParseError | null {
+function getStoredSettings(): UserSettings | Error | null {
   const settingsStr = localStorage.getItem(LOCALSTORAGE_SETTINGS_KEY);
   if (!settingsStr) {
     return null;
@@ -291,13 +291,11 @@ async function updateAsync(
 // TODO: do computation in Worker instead of delaying startup
 const initialSettings = getStoredSettings();
 export const settingsError =
-  initialSettings instanceof ParseError ? initialSettings : null;
-// TODO: show error message to user if stored settings are corrupt
-if (settingsError) console.error(settingsError);
+  initialSettings instanceof Error ? initialSettings : null;
 
 function createSettingsStore() {
   const { subscribe, set, update } = writable(
-    initialSettings instanceof ParseError ? null : initialSettings,
+    initialSettings instanceof Error ? null : initialSettings,
   );
   return {
     subscribe,
@@ -324,13 +322,9 @@ function createSettingsStore() {
       set(newSettings);
     },
     importSettings(imported: unknown) {
-      const parseResult = EncodedUserSettings_schema.safeParse(imported);
-      if (!parseResult.success) {
-        throw parseResult.error;
-      }
-      const encoded = parseResult.data;
+      const encoded = EncodedUserSettings_schema.parse(imported);
       const decoded = decodeSettings(encoded);
-      if (decoded instanceof ParseError) {
+      if (decoded instanceof Error) {
         throw decoded;
       }
       saveEncoded(encoded);

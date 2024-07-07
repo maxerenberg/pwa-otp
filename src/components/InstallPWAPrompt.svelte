@@ -23,7 +23,7 @@
   redirectToSetupAfterPWAInstallation();
 </script>
 
-<Header title="Authenticator" />
+<Header title="Install PWA" backHref="/" />
 <main class={commonStyles.mainCenter}>
   <p>
     This website is a Progressive Web App (PWA) and is best experienced when

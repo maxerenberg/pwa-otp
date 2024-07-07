@@ -1,8 +1,10 @@
 <script lang="ts">
   import { onMount } from "svelte";
+  import { ZodError } from "zod";
   import Button from "./Button.svelte";
   import Header from "./Header.svelte";
   import Spinner from "./Spinner.svelte";
+  import FormattedZodError from "./FormattedZodError.svelte";
   import { isInstalledAsPWA } from "../lib/pwa";
   import { redirectTo } from "../lib/routing";
   import { settings } from "../lib/userSettings";
@@ -11,7 +13,7 @@
   import styles from "./ImportSettings.module.css";
 
   let inputRef: HTMLInputElement | null = null;
-  let errorText = "";
+  let error: Error | null = null;
   let isProcessing = false;
 
   // Blob.text() is not available in iOS Safari 12.5
@@ -27,7 +29,7 @@
   async function onInputChange(ev: Event) {
     const fileList = (ev.target as HTMLInputElement).files;
     if (!fileList || fileList.length === 0) return;
-    errorText = "";
+    error = null;
     isProcessing = true;
     try {
       const text = await readTextFromFile(fileList[0]);
@@ -35,7 +37,7 @@
       settings.importSettings(imported);
       redirectTo("/");
     } catch (err) {
-      errorText = (err as Error).message;
+      error = err as Error;
     } finally {
       isProcessing = false;
     }
@@ -64,8 +66,15 @@
 
 <main class={commonStyles.mainCenter}>
   <p>Would you like to import existing settings?</p>
-  {#if errorText}
-    <p class={styles.errorMessage}>{errorText}</p>
+  {#if error}
+    {#if error instanceof ZodError}
+      <p class={styles.errorMessage}>
+        Settings are invalid, please see errors below
+      </p>
+      <FormattedZodError {error} />
+    {:else}
+      <p class={styles.errorMessage}>{error.message}</p>
+    {/if}
   {/if}
   <form on:submit={onSubmit}>
     <Button

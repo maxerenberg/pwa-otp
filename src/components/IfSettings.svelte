@@ -26,5 +26,5 @@
     <slot settings={ident($settings)} />
   {/if}
 {:else}
-  <NoSettings />
+  <NoSettings noHeader={allowEncrypted} />
 {/if}
