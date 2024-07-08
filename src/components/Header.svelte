@@ -80,3 +80,7 @@
 </Drawer>
 
 <NavList {isShowingAccounts} />
+
+<div class={styles.rightColumn}>
+  <slot name="right-column" />
+</div>

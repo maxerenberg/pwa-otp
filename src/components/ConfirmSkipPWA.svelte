@@ -9,7 +9,7 @@
   redirectToSetupAfterPWAInstallation();
 </script>
 
-<Header title="Authenticator" />
+<Header title="Install PWA" backHref="/#/setup/install-pwa" />
 <main class={commonStyles.mainCenter}>
   <p>
     Some browsers discard localStorage after a period of idle activity for sites

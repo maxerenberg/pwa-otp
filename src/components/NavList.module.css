@@ -3,12 +3,9 @@
     display: none;
   }
 
-  @media (min-width: 768px) {
-    background-color: var(--nav-bg);
-
-    @media (prefers-color-scheme: dark) {
-      border-right: var(--app-section-border);
-    }
+  background-color: var(--nav-bg);
+  @media (prefers-color-scheme: dark) {
+    border-right: var(--app-section-border);
   }
 }
 

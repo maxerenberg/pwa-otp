@@ -38,8 +38,18 @@
 
 {#if isRearranging}
   <Header title="Authenticator" hideMenu>
-    <Link href="/" class={headerStyles.headingLink} slot="top-right-button">
+    <Link
+      href="/"
+      class={`${headerStyles.headingLink} ${headerStyles.topRightButton}`}
+      slot="top-right-button"
+    >
       Done
+    </Link>
+    <Link href="/" class="text-decoration-none" slot="right-column">
+      <Button
+        class={`${headerStyles.rightColumnButton} ${commonStyles.largeBoldButton}`}
+        >Done</Button
+      >
     </Link>
   </Header>
 {:else}
@@ -51,8 +61,18 @@
       ariaLabel="Add account"
     >
       <PlusSolid
-        class={`${headerStyles.headingIcon} ${headerStyles.headingButton}`}
+        class={`${headerStyles.headingIcon} ${headerStyles.headingButton} ${headerStyles.topRightButton}`}
       />
+    </Link>
+    <Link
+      href="/#/add-account"
+      class="text-decoration-none"
+      slot="right-column"
+    >
+      <Button
+        class={`${headerStyles.rightColumnButton} ${commonStyles.largeBoldButton}`}
+        >Add account</Button
+      >
     </Link>
   </Header>
 {/if}
@@ -74,6 +94,7 @@
         use:dndzone={{ items: accountsCopy, flipDurationMs }}
         on:consider={onConsider}
         on:finalize={onFinalize}
+        role="list"
       >
         <!-- An element uses the animate directive must be the immediate
              child of a keyed each block -->
@@ -87,7 +108,7 @@
         {/each}
       </ul>
     {:else}
-      <ul>
+      <ul role="list">
         {#each accounts as account (account.id)}
           <li class={itemStyles.item}>
             <AccountListItem {account} hideCode={hideCodes} />

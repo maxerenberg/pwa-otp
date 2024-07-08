@@ -1,5 +1,6 @@
 <script lang="ts">
   import Header from "./Header.svelte";
+  import Button from "./Button.svelte";
   import Link from "./Link.svelte";
   import IfSettings from "./IfSettings.svelte";
   import CogOutline from "./icons/CogOutline.svelte";
@@ -39,11 +40,21 @@
         href={`/#/account/${accountID}/settings`}
         class={`${headerStyles.topRightButton} text-decoration-none`}
         slot="top-right-button"
-        ariaLabel="Settings for this account"
+        ariaLabel="Account settings"
       >
         <CogOutline
           class={`${headerStyles.headingIcon} ${headerStyles.headingButton}`}
         />
+      </Link>
+      <Link
+        href={`/#/account/${accountID}/settings`}
+        class="text-decoration-none"
+        slot="right-column"
+      >
+        <Button
+          class={`${headerStyles.rightColumnButton} ${commonStyles.largeBoldButton}`}
+          >Account settings</Button
+        >
       </Link>
     </Header>
     <main class={commonStyles.appMain}>

@@ -111,11 +111,15 @@ button {
   }
 
   display: grid;
-  /* header, main */
+  /* top row is the header */
   grid-template-rows: auto 1fr;
 
   @media (min-width: 768px) {
     grid-template-columns: 270px 1fr;
+  }
+
+  @media (min-width: 992px) {
+    grid-template-columns: 270px 1fr 270px;
   }
 }
 
