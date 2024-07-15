@@ -15,7 +15,7 @@
     "checkJs": true,
     "isolatedModules": true,
     "strict": true,
-    "types": ["vite-plugin-pwa/svelte"]
+    "types": ["vite-plugin-pwa/svelte", "@testing-library/jest-dom"]
   },
   "include": ["src/**/*.ts", "src/**/*.js", "src/**/*.svelte"],
   "references": [{ "path": "./tsconfig.node.json" }]

@@ -18,11 +18,15 @@
   ],
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^3.0.1",
+    "@testing-library/jest-dom": "^6.4.6",
+    "@testing-library/svelte": "^5.2.0",
+    "@testing-library/user-event": "^14.5.2",
     "@tsconfig/svelte": "^5.0.2",
     "autoprefixer": "^10.4.16",
     "browserslist": "^4.23.0",
     "browserslist-to-esbuild": "^2.1.1",
     "eslint": "^8.57.0",
+    "jsdom": "^24.1.0",
     "postcss": "^8.4.32",
     "postcss-html": "^1.7.0",
     "postcss-load-config": "^5.0.2",
@@ -39,7 +43,7 @@
     "typescript-eslint": "^7.0.2",
     "vite": "^5.1.0",
     "vite-plugin-pwa": "^0.20.0",
-    "vitest": "^1.4.0"
+    "vitest": "^2.0.2"
   },
   "dependencies": {
     "bits-ui": "^0.21.1",

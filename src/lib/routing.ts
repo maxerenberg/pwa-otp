@@ -1,4 +1,4 @@
-import { readable } from "svelte/store";
+import { writable } from "svelte/store";
 
 /**
  * The path of BASE_URL, without the trailing slash
@@ -54,7 +54,8 @@ export function getQueryParams(): Partial<Record<string, string>> {
     );
 }
 
-export const normalizedPath = readable(
+// Needs to be writable so that we can reset it from the unit tests
+export const normalizedPath = writable(
   getNormalizedPath(),
   function start(set) {
     // Make sure we get the latest value when a component mounts

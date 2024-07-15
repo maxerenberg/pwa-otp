@@ -1,7 +1,8 @@
-import { defineConfig } from "vite";
+import { defineConfig } from "vitest/config";
 import { VitePWA } from "vite-plugin-pwa";
 import browserslistToEsbuild from "browserslist-to-esbuild";
 import { svelte } from "@sveltejs/vite-plugin-svelte";
+import { svelteTesting } from "@testing-library/svelte/vite";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -12,6 +13,7 @@ export default defineConfig({
   },
   plugins: [
     svelte(),
+    svelteTesting(),
     VitePWA({
       injectRegister: "inline",
       workbox: {
@@ -48,4 +50,8 @@ export default defineConfig({
       },
     }),
   ],
+  test: {
+    environment: "jsdom",
+    setupFiles: ["./vitest-setup.js"],
+  },
 });

@@ -48,7 +48,7 @@ const EncodedUserSettings_schema = z
       }),
     ]),
   );
-type EncodedUserSettings = z.infer<typeof EncodedUserSettings_schema>;
+export type EncodedUserSettings = z.infer<typeof EncodedUserSettings_schema>;
 
 export type EncryptedUserSettings = {
   hideCodes: boolean;
@@ -83,7 +83,7 @@ export function settingsAreEncrypted(
 // TODO: request "persistent" storage
 // https://developer.mozilla.org/en-US/docs/Web/API/StorageManager/persist
 
-const LOCALSTORAGE_SETTINGS_KEY = "pwa-otp-settings";
+export const LOCALSTORAGE_SETTINGS_KEY = "pwa-otp-settings";
 
 function decodeSettings(encodedSettings_: unknown): UserSettings | Error {
   const parseResult = EncodedUserSettings_schema.safeParse(encodedSettings_);
