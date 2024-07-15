@@ -42,7 +42,7 @@
 
 <header class={`${styles.header} ${backHref ? styles.centerTitle : ""}`}>
   {#if backHref}
-    <Link href={backHref}>
+    <Link href={backHref} class={styles.headingButtonContainer}>
       <button
         class={styles.headingButton}
         aria-label="Back"
@@ -53,7 +53,7 @@
     </Link>
   {:else if !hideMenu}
     <button
-      class={`${styles.headingButton} ${styles.toggleNavButton}`}
+      class={`${styles.headingButtonContainer} ${styles.headingButton} ${styles.toggleNavButton}`}
       aria-label="Toggle navigation"
       aria-haspopup="dialog"
       aria-expanded={drawerOpen}
@@ -66,11 +66,10 @@
   <h1 class={styles.heading}>
     {title}
   </h1>
-  <!-- TODO: use right column instead of button for wide screens -->
-  <slot name="top-right-button">
-    <!-- Keep a div on both sides so that the title is in the center -->
-    <div class={styles.headingIcon} />
-  </slot>
+  <!-- Keep a div on both sides so that the title is in the center -->
+  <div class={styles.headingButtonContainer}>
+    <slot name="top-right-button" />
+  </div>
 </header>
 
 <Drawer bind:open={drawerOpen}>

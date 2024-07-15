@@ -38,13 +38,11 @@
     <Header title="" htmlTitle={account.issuer} backHref="/">
       <Link
         href={`/#/account/${accountID}/settings`}
-        class={`${headerStyles.topRightButton} text-decoration-none`}
+        class={`${headerStyles.headingLink} ${headerStyles.topRightButton}`}
         slot="top-right-button"
         ariaLabel="Account settings"
       >
-        <CogOutline
-          class={`${headerStyles.headingIcon} ${headerStyles.headingButton}`}
-        />
+        <CogOutline class={headerStyles.headingIcon} />
       </Link>
       <Link
         href={`/#/account/${accountID}/settings`}

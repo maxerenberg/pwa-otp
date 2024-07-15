@@ -40,7 +40,7 @@
   <Header title="Authenticator" hideMenu>
     <Link
       href="/"
-      class={`${headerStyles.headingLink} ${headerStyles.topRightButton}`}
+      class={`${headerStyles.headingLink} ${headerStyles.text} ${headerStyles.topRightButton}`}
       slot="top-right-button"
     >
       Done
@@ -48,21 +48,20 @@
     <Link href="/" class="text-decoration-none" slot="right-column">
       <Button
         class={`${headerStyles.rightColumnButton} ${commonStyles.largeBoldButton}`}
-        >Done</Button
       >
+        Done
+      </Button>
     </Link>
   </Header>
 {:else}
   <Header title="Authenticator">
     <Link
       href="/#/add-account"
-      class="text-decoration-none"
+      class={`${headerStyles.headingLink} ${headerStyles.topRightButton}`}
       slot="top-right-button"
       ariaLabel="Add account"
     >
-      <PlusSolid
-        class={`${headerStyles.headingIcon} ${headerStyles.headingButton} ${headerStyles.topRightButton}`}
-      />
+      <PlusSolid class={headerStyles.headingIcon} />
     </Link>
     <Link
       href="/#/add-account"
