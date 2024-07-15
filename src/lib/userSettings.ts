@@ -146,6 +146,14 @@ function decodeSettings(encodedSettings_: unknown): UserSettings | Error {
   }
 }
 
+type SettingsStoreType = UserSettings | null;
+
+export function settingsAreReady(
+  s: SettingsStoreType,
+): s is UnencryptedUserSettings {
+  return s !== null && !settingsAreEncrypted(s);
+}
+
 function getStoredSettings(): UserSettings | Error | null {
   const settingsStr = localStorage.getItem(LOCALSTORAGE_SETTINGS_KEY);
   if (!settingsStr) {
@@ -272,12 +280,12 @@ async function decryptSettings(
  * @param f The callback which updates the settings
  */
 async function updateAsync(
-  update: (f: Updater<UserSettings | null>) => void,
+  update: (f: Updater<SettingsStoreType>) => void,
   f: (s: UnencryptedUserSettings) => UnencryptedUserSettings,
 ) {
-  let updated: UserSettings | null = null;
-  update((s: UserSettings | null) => {
-    if (s && !settingsAreEncrypted(s)) {
+  let updated: SettingsStoreType = null;
+  update((s: SettingsStoreType) => {
+    if (settingsAreReady(s)) {
       s = f(s);
       updated = s;
     }
@@ -288,16 +296,10 @@ async function updateAsync(
   }
 }
 
-// TODO: do computation in Worker instead of delaying startup
-const initialSettings = getStoredSettings();
-export const settingsError =
-  initialSettings instanceof Error ? initialSettings : null;
-
 function createSettingsStore() {
-  const { subscribe, set, update } = writable(
-    initialSettings instanceof Error ? null : initialSettings,
-  );
+  const { subscribe, set, update } = writable<SettingsStoreType>(null);
   return {
+    set,
     subscribe,
     async createWithoutEncryption() {
       const newSettings: UnencryptedUserSettings = {
@@ -398,6 +400,17 @@ function createSettingsStore() {
 }
 
 export const settings = createSettingsStore();
+export const settingsError = writable<Error | null>(null);
+
+export function initializeSettingsStore() {
+  // TODO: do computation in Worker instead of delaying startup
+  const initialSettings = getStoredSettings();
+  if (initialSettings instanceof Error) {
+    settingsError.set(initialSettings);
+  } else {
+    settings.set(initialSettings);
+  }
+}
 
 /**
  * @returns undefined if the settings are null or encrypted; null if the
@@ -405,10 +418,10 @@ export const settings = createSettingsStore();
  *   settings.account with the given ID
  */
 export function getAccountByID(
-  settings: UserSettings | null,
+  settings: SettingsStoreType,
   accountID: string,
 ): UnencryptedTOTPAccount | undefined | null {
-  if (!settings || settingsAreEncrypted(settings)) {
+  if (!settingsAreReady(settings)) {
     return undefined;
   }
   const filtered = settings.accounts.filter((a) => a.id === accountID);
@@ -422,7 +435,9 @@ const initialTotpCalculators: Partial<Record<string, TOTPCalculator>> = {};
 export const totpCalculators = derived(
   settings,
   ($settings, set, update) => {
-    if (!$settings || settingsAreEncrypted($settings)) return;
+    if (!settingsAreReady($settings)) {
+      return;
+    }
     // TODO: consider using https://github.com/square/svelte-store to simplify
     // async logic
     update((totpCalculators) => {

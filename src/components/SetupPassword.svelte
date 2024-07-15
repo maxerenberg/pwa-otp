@@ -35,6 +35,10 @@
     if (inProgress) {
       return;
     }
+    if ($settings && settingsAreEncrypted($settings)) {
+      // Should never get here
+      return;
+    }
     if (password !== password2) {
       showErrorMessage = true;
       return;
@@ -42,12 +46,6 @@
     inProgress = true;
     try {
       if ($settings) {
-        if (settingsAreEncrypted($settings)) {
-          // Should never get here
-          throw new Error(
-            "Tried to add/change password when UI should have been locked",
-          );
-        }
         await settings.addOrChangePassword($settings, password);
       } else {
         await settings.createWithPassword(password);

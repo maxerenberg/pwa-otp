@@ -6,11 +6,12 @@
   import MessagesOutline from "./icons/MessagesOutline.svelte";
   import QuestionCircleOutline from "./icons/QuestionCircleOutline.svelte";
   import UserEditOutline from "./icons/UserEditOutline.svelte";
-  import { settings } from "../lib/userSettings";
+  import { settings, settingsAreReady } from "../lib/userSettings";
   import styles from "./NavList.module.css";
 
   export let closeDrawer: (() => void) | null = null;
   const inDrawer = !!closeDrawer;
+
   export let isShowingAccounts: boolean;
 
   async function onClickToggleHideCodes() {
@@ -28,14 +29,17 @@
   <!-- TODO: activeUrl -->
   <!-- TODO: add real links -->
   <ul role="list" class={styles.list}>
-    {#if isShowingAccounts}
+    <!-- Note: settingsAreReady will always be true when isShowingAccounts
+         is true; this extra call is just to satisfy the type checker when
+         accessing hideCodes -->
+    {#if isShowingAccounts && settingsAreReady($settings)}
       <NavListItem href="/#/rearrange-accounts" onClick={closeDrawer}>
         <UserEditOutline />
         <span>Rearrange accounts</span>
       </NavListItem>
       <li>
         <button on:click={onClickToggleHideCodes}>
-          {#if $settings?.hideCodes}
+          {#if $settings.hideCodes}
             <EyeOutline />
             <span>Show codes</span>
           {:else}

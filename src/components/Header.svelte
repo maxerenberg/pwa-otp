@@ -8,7 +8,7 @@
   import Link from "./Link.svelte";
   import NavList from "./NavList.svelte";
   import { normalizedPath } from "../lib/routing";
-  import { settings, settingsAreEncrypted } from "../lib/userSettings";
+  import { settings, settingsAreReady } from "../lib/userSettings";
   import commonStyles from "./common.module.css";
   import styles from "./Header.module.css";
 
@@ -33,8 +33,7 @@
     drawerOpen = false;
   }
 
-  $: isShowingAccounts =
-    !!$settings && !settingsAreEncrypted($settings) && $normalizedPath === "/";
+  $: isShowingAccounts = settingsAreReady($settings) && $normalizedPath === "/";
 </script>
 
 <svelte:head>

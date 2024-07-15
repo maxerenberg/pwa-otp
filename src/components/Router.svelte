@@ -87,4 +87,4 @@
   }
 </script>
 
-<svelte:component this={currentComponent} />
+<slot component={currentComponent} />

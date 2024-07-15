@@ -1,11 +1,11 @@
 <script lang="ts">
+  import EnterPassword from "./EnterPassword.svelte";
   import NoSettings from "./NoSettings.svelte";
   import {
     settings,
     settingsAreEncrypted,
     type UserSettings,
   } from "../lib/userSettings";
-  import EnterPassword from "./EnterPassword.svelte";
 
   // If true, the slot will be shown even if the accounts are still encrypted
   export let allowEncrypted = false;
@@ -17,14 +17,10 @@
   }
 </script>
 
-<!-- TODO: move this logic up into the App/Home component -->
-
-{#if $settings}
-  {#if settingsAreEncrypted($settings) && !allowEncrypted}
-    <EnterPassword encryptedSettings={$settings} />
-  {:else}
-    <slot settings={ident($settings)} />
-  {/if}
-{:else}
+{#if !$settings}
   <NoSettings noHeader={allowEncrypted} />
+{:else if settingsAreEncrypted($settings) && !allowEncrypted}
+  <EnterPassword encryptedSettings={$settings} />
+{:else}
+  <slot settings={ident($settings)} />
 {/if}

@@ -9,13 +9,14 @@
     encodeSettings,
     settings,
     settingsAreEncrypted,
+    settingsAreReady,
   } from "../lib/userSettings";
   import commonStyles from "./common.module.css";
   import styles from "./Settings.module.css";
 
   let isDownloading = false;
   async function downloadSettings() {
-    if (!$settings || settingsAreEncrypted($settings) || isDownloading) {
+    if (!settingsAreReady($settings) || isDownloading) {
       // Should never get here
       return;
     }
@@ -77,7 +78,7 @@
             <AngleRight />
           </Link>
         </li>
-        {#if $settings && !settingsAreEncrypted($settings)}
+        {#if settingsAreReady($settings)}
           <li>
             <button on:click={downloadSettings} disabled={isDownloading}>
               <span>Download settings</span>

@@ -7,7 +7,7 @@
   import {
     encodeSettings,
     settings,
-    settingsAreEncrypted,
+    settingsAreReady,
   } from "../lib/userSettings";
   import commonStyles from "./common.module.css";
   import styles from "./form.module.css";
@@ -26,11 +26,7 @@
 
   async function onSubmit(ev: SubmitEvent) {
     ev.preventDefault();
-    if (
-      !$settings ||
-      settingsAreEncrypted($settings) ||
-      uploadState !== UploadState.Idle
-    ) {
+    if (!settingsAreReady($settings) || uploadState !== UploadState.Idle) {
       // Should never get here
       return;
     }
