@@ -47,10 +47,6 @@
     min-width: 2.5rem;
     height: 2.5rem;
   }
-
-  > .headingLink {
-    height: 100%;
-  }
 }
 
 .headingLink {
@@ -62,6 +58,10 @@
     display: flex;
     align-items: center;
   }
+}
+
+.headingButtonContainer > .headingLink {
+  height: 100%;
 }
 
 .headingButton,
