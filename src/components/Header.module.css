@@ -102,7 +102,7 @@
   background-color: var(--nav-bg);
 
   @media (prefers-color-scheme: dark) {
-    border-right: var(--app-section-border);
+    border-left: var(--app-section-border);
   }
 
   @media (min-width: 992px) {
