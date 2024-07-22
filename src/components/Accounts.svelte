@@ -63,9 +63,15 @@
     >
       <PlusSolid class={headerStyles.headingIcon} />
     </Link>
+    <!--
+      There will already be an "Add account" button in the <main> when
+      there are no accounts.
+      Note that Svelte does not seem to like slots inside if statements;
+      see https://github.com/sveltejs/svelte/issues/5604.
+    -->
     <Link
       href="/#/add-account"
-      class="text-decoration-none"
+      class={`text-decoration-none ${accounts.length > 0 ? "" : "hidden"}`}
       slot="right-column"
     >
       <Button
