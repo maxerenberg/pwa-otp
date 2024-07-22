@@ -1,4 +1,4 @@
-import { vi } from "vitest";
+import { assert, vi } from "vitest";
 import { normalizedPath } from "../lib/routing";
 import {
   LOCALSTORAGE_SETTINGS_KEY,
@@ -47,10 +47,25 @@ const encodedEncryptedSettings: EncodedUserSettings = {
 Object.freeze(encodedEncryptedSettings);
 export { encodedEncryptedSettings };
 
+export const encodedUnencryptedSettings: EncodedUserSettings = {
+  version: 1,
+  hideCodes: false,
+  accounts: [],
+  encryptionMethod: "none",
+};
+
 export function saveEncodedSettings(s: EncodedUserSettings) {
   localStorage.setItem(LOCALSTORAGE_SETTINGS_KEY, JSON.stringify(s));
 }
 
 export function deleteSettings() {
   localStorage.removeItem(LOCALSTORAGE_SETTINGS_KEY);
+}
+
+export function getEncodedSettings(): unknown {
+  const s = localStorage.getItem(LOCALSTORAGE_SETTINGS_KEY);
+  if (s === null) {
+    assert.fail("No settings are stored in localStorage");
+  }
+  return JSON.parse(s);
 }
