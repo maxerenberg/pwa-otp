@@ -19,14 +19,14 @@
 
   $: valid = !!(issuer && name && encodedSecret);
 
-  function onSubmit(ev: SubmitEvent) {
+  async function onSubmit(ev: SubmitEvent) {
     ev.preventDefault();
     const secret = base32decode(encodedSecret);
     if (secret instanceof ParseError) {
       showInvalidSecretError = true;
       return;
     }
-    settings.addAccount({
+    await settings.addAccount({
       issuer,
       name,
       algorithm: "SHA1",
@@ -53,17 +53,20 @@
       <h3 class={styles.sectionTitle}>ACCOUNT INFO</h3>
       <div class={styles.textInputs}>
         <input
+          aria-label="Issuer"
           placeholder="Issuer (e.g. Google)"
           bind:value={issuer}
           required
         />
         <input
+          aria-label="Name"
           placeholder="Name (e.g. jdoe@gmail.com)"
           bind:value={name}
           required
         />
         <div class={styles.secretContainer}>
           <input
+            aria-label="Secret"
             placeholder="Secret"
             on:input={onSecretInput}
             type={hideSecret ? "password" : "text"}

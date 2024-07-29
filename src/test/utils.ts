@@ -1,5 +1,8 @@
-import { assert, vi } from "vitest";
+import { assert, expect, vi } from "vitest";
+import { screen } from "@testing-library/svelte";
+import type { UserEvent } from "@testing-library/user-event";
 import { normalizedPath } from "../lib/routing";
+import type { Digits } from "../lib/totp";
 import {
   initializeSettingsStore,
   LOCALSTORAGE_SETTINGS_KEY,
@@ -56,6 +59,9 @@ export const encodedUnencryptedSettings: EncodedUserSettings = {
   encryptionMethod: "none",
 };
 
+// Generated with `head -c 20 /dev/urandom | base32`
+export const totpSecret = "WJTYRQ5CNNJ77LPO6ZHOXWH6YCLAQYH7";
+
 export function saveEncodedSettings(s: EncodedUserSettings) {
   localStorage.setItem(LOCALSTORAGE_SETTINGS_KEY, JSON.stringify(s));
 }
@@ -74,4 +80,61 @@ export function getEncodedSettings(): EncodedUserSettings {
 
 export function reinitializeSettingsStore() {
   initializeSettingsStore();
+}
+
+/**
+ * Types the password into the form and submits it.
+ * WARNING: this does not wait until the page has changed. The caller
+ * is responsible for checking this after calling this function.
+ */
+export async function enterPassword(user: UserEvent, password: string) {
+  const input = await screen.findByLabelText("enter your password", {
+    exact: false,
+  });
+  await user.type(input, password);
+  await user.keyboard("[Enter]");
+}
+
+/**
+ * Adds a TOTP account. Must be called from the home page. Will
+ * return to the home page at the end of the function call.
+ */
+export async function addTOTPAccount(
+  user: UserEvent,
+  {
+    issuer,
+    name,
+    secret,
+    digits,
+  }: {
+    issuer: string;
+    name: string;
+    secret?: string;
+    digits?: Digits;
+  },
+) {
+  // We need to use findAll because if no accounts have been created yet,
+  // then two buttons will be present (but only the first will be visible)
+  let button = (
+    await screen.findAllByRole("button", { name: "Add account" })
+  )[0];
+  expect(button).toBeDefined();
+  await user.click(button);
+  let input = await screen.findByLabelText("Issuer");
+  expect(location.hash).toBe("#/add-account");
+  await user.type(input, issuer);
+  input = await screen.findByLabelText("Name");
+  await user.type(input, name);
+  input = await screen.findByLabelText("Secret");
+
+  secret ??= totpSecret;
+  await user.type(input, secret);
+  digits ??= 6;
+  input = await screen.findByLabelText(digits.toString());
+  await user.click(input);
+  button = await screen.findByRole("button", { name: "Finish" });
+  await user.click(button);
+
+  await screen.findByRole("button", { name: "Add account" });
+  expect(location.hash).toBe("");
 }

@@ -7,10 +7,11 @@
   export let noHeader = false;
 </script>
 
+{#if !noHeader}
+  <Header title="Authenticator" />
+{/if}
+
 <main class={commonStyles.mainCenter}>
-  {#if !noHeader}
-    <Header title="Authenticator" />
-  {/if}
   <p>You need to setup an account to access this page.</p>
   <Link href="/" class="text-decoration-none">
     <Button class={commonStyles.largeBoldButton}>Return home</Button>

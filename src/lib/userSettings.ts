@@ -24,10 +24,16 @@ const SCHEMA_VERSION = 1;
 // Replace 'secret: Uint8Array' with 'secret: string'
 const EncodedUnencryptedTOTPAccount_schema =
   UnencryptedTOTPAccount_schema.merge(z.object({ secret: z.string() }));
+export type EncodedUnencryptedTOTPAccount = z.infer<
+  typeof EncodedUnencryptedTOTPAccount_schema
+>;
 // Replace 'encryptedSecret: Uint8Array' with 'encryptedSecret: string'
 const EncodedEncryptedTOTPAccount_schema = EncryptedTOTPAccount_schema.merge(
   z.object({ encryptedSecret: z.string() }),
 );
+export type EncodedEncryptedTOTPAccount = z.infer<
+  typeof EncodedEncryptedTOTPAccount_schema
+>;
 const EncodedUserSettings_schema = z
   .object({
     version: z.number(),

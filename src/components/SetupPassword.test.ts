@@ -9,6 +9,7 @@ import {
   commonAfterEach,
   getEncodedSettings,
   reinitializeSettingsStore,
+  enterPassword,
 } from "../test/utils";
 
 beforeEach(() => {
@@ -56,10 +57,6 @@ test("Passwords match", async () => {
   expect(encodedSettings.encryptionMethod).toBe("password");
 
   reinitializeSettingsStore();
-  const input = await screen.findByLabelText("enter your password", {
-    exact: false,
-  });
-  await user.type(input, "abc");
-  await user.keyboard("[Enter]");
+  await enterPassword(user, "abc");
   await screen.findByText("You don't have any accounts yet.");
 });
