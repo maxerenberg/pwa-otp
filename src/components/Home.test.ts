@@ -8,7 +8,6 @@ import {
   commonAfterEach,
   encodedEncryptedSettings,
   saveEncodedSettings,
-  deleteSettings,
 } from "../test/utils";
 
 beforeEach(commonBeforeEach);
@@ -29,8 +28,6 @@ describe("No settings", () => {
 
 describe("Encrypted settings", () => {
   beforeEach(() => saveEncodedSettings(encodedEncryptedSettings));
-
-  afterEach(deleteSettings);
 
   test("Password page appears", async () => {
     const user = userEvent.setup();

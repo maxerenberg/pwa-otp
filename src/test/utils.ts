@@ -1,6 +1,7 @@
 import { assert, vi } from "vitest";
 import { normalizedPath } from "../lib/routing";
 import {
+  initializeSettingsStore,
   LOCALSTORAGE_SETTINGS_KEY,
   settings,
   settingsError,
@@ -32,6 +33,7 @@ export function commonAfterEach() {
   // This seems to cause a crash due to a race condition where a component
   // is getting torn down and calling isInstalledAsPWA()
   //delete (window as any).matchMedia;
+  deleteSettings();
 }
 
 // password is "password"
@@ -62,10 +64,14 @@ export function deleteSettings() {
   localStorage.removeItem(LOCALSTORAGE_SETTINGS_KEY);
 }
 
-export function getEncodedSettings(): unknown {
+export function getEncodedSettings(): EncodedUserSettings {
   const s = localStorage.getItem(LOCALSTORAGE_SETTINGS_KEY);
   if (s === null) {
     assert.fail("No settings are stored in localStorage");
   }
   return JSON.parse(s);
+}
+
+export function reinitializeSettingsStore() {
+  initializeSettingsStore();
 }
