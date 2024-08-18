@@ -100,6 +100,7 @@
       style="display:none"
       accept=".json,application/json"
       bind:this={inputRef}
+      data-testid="import-settings-input"
     />
   </form>
 </main>
