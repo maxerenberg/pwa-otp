@@ -9,6 +9,7 @@ import {
   commonAfterEach,
   encodedUnencryptedSettings,
   saveEncodedSettings,
+  getEncodedSettings,
 } from "../test/utils";
 
 beforeEach(commonBeforeEach);
@@ -40,9 +41,11 @@ test("Delete TOTP account", async () => {
   });
 
   await deleteTOTPAccount(user, "Gmail");
+  expect(getEncodedSettings().accounts).toHaveLength(1);
   await screen.findByText("Outlook");
   expect(screen.queryByText("Gmail")).not.toBeInTheDocument();
 
   await deleteTOTPAccount(user, "Outlook");
+  expect(getEncodedSettings().accounts).toHaveLength(0);
   await screen.findByText("You don't have any accounts yet.");
 });

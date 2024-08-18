@@ -43,7 +43,7 @@
   export { className as class };
 </script>
 
-<div class={className}>
+<div class={className} role="timer">
   <svg viewBox={`0 0 ${width} ${height}`} xmlns="http://www.w3.org/2000/svg">
     <circle {cx} {cy} {r} stroke-width={strokeWidth} fill="none" />
     <path

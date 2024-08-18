@@ -7,6 +7,7 @@
   import { now } from "../lib/timer";
   import { otpCodeToStr } from "../lib/totp";
   import { totpCalculators } from "../lib/userSettings";
+  import commonStyles from "./common.module.css";
   import styles from "./AccountListItem.module.css";
 
   export let account: TOTPAccount;
@@ -54,18 +55,19 @@
         class={styles.issuerLogo}
       />
       <div class={styles.issuerAndName}>
-        <h4>{account.issuer}</h4>
-        <h4>{account.name}</h4>
+        <h3>{account.issuer}</h3>
+        <p>{account.name}</p>
       </div>
       <!-- empty div for bottom-left corner in grid -->
       <div />
       {#if !hideCode}
-        <div class={styles.otpContainer}>
+        <article class={styles.otpContainer}>
+          <h4 class={commonStyles.srOnly}>Code</h4>
           <span class={styles.otpCode} style={`--width: ${otpCodeStrWidth}`}
             >{otpCodeStr}</span
           >
           <TimerCircle class={styles.timerCircle} now={$now} />
-        </div>
+        </article>
       {/if}
     </div>
     <div class={styles.rightArrowContainer}>
