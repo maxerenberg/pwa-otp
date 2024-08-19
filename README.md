@@ -4,6 +4,8 @@
 
 <p align="center">An offline-only web-based TOTP application</p>
 
+[![](https://github.com/maxerenberg/pwa-otp/workflows/CI/badge.svg)](https://github.com/maxerenberg/pwa-otp/actions?query=workflow%3ACI)
+
 # pwa-otp
 
 This is an offline-only [Progressive Web App](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps)
