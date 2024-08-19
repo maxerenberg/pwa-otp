@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "VITE_APP_COMMIT_HASH=`git rev-parse --short=10 HEAD` vite build",
+    "build": "vite build",
     "preview": "vite preview",
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "format": "prettier --write .",

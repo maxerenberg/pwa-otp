@@ -75,8 +75,8 @@
     for (const [pattern, component] of regexRoutes) {
       if (pattern.test(path)) return component;
     }
-    // TODO: after build step, create symlink from 404.html to index.html
-    // (for GitHub pages)
+    // Note: for this to work in GitHub pages, we need to create symlink from
+    // 404.html to index.html
     return PageNotFound;
   }
 

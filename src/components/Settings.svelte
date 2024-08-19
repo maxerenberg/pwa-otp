@@ -50,6 +50,7 @@
   let isCheckingForUpdates = false;
   async function checkForUpdates() {
     isCheckingForUpdates = true;
+    // TODO: check if error was thrown, show error message to user
     try {
       await updateServiceWorkerWithoutReload();
     } finally {
