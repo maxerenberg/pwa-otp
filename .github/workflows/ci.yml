@@ -26,31 +26,26 @@ jobs:
       - run: npm run check
       - run: npm run stylelint
       - run: npm run test
-  build_pr:
-    needs: test
-    if: github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
-    steps:
-      - run: npx vite build
-  build_push:
-    needs: test
-    if: github.event_name != 'pull_request'
-    runs-on: ubuntu-latest
-    steps:
+      - name: Build (PR)
+        if: github.event_name == 'pull_request'
+        run: npm run build
       - name: Setup Pages
+        if: github.event_name != 'pull_request'
         id: setup_pages
         uses: actions/configure-pages@v5
-      - name: Build
+      - name: Build (push)
+        if: github.event_name != 'pull_request'
         run: |
-          export VITE_APP_COMMIT_HASH=$(git rev-parse --short=10 $GITHUB_SHA)
-          npx vite build --base "${{ steps.setup_pages.outputs.base_path }}"
+          export VITE_APP_COMMIT_HASH=$(echo -n $GITHUB_SHA | head -c 10)
+          node_modules/.bin/vite build --base "${{ steps.setup_pages.outputs.base_path }}"
           ln -s index.html dist/404.html
       - name: Upload artifact
+        if: github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./dist
   deploy:
-    needs: build_push
+    needs: test
     if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     permissions:
