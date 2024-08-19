@@ -19,12 +19,7 @@ export default defineConfig({
       workbox: {
         // Make sure these patterns do not overlap with the files in includeAssets
         // or else they will get included twice in sw.js
-        globPatterns: [
-          "**/*.{js,css,html}",
-          // Currently, all of our SVG assets are below the default assetsInlineLimit
-          // of 4 KiB (https://vitejs.dev/config/build-options#build-assetsinlinelimit)
-          //"assets/*.svg"
-        ],
+        globPatterns: ["**/*.{js,css,html}", "assets/*.{svg,woff2}"],
       },
       includeAssets: ["favicon.ico", "favicon.svg", "apple-touch-icon.png"],
       manifest: {

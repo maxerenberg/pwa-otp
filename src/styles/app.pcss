@@ -49,9 +49,21 @@ button {
   font: inherit;
 }
 
+@font-face {
+  font-family: "Noto Sans";
+  src: local("Noto Sans"), local("Noto Sans Regular"), local("NotoSans-Regular"),
+    url("../assets/NotoSans-Regular.woff2");
+}
+
+@font-face {
+  font-family: "Noto Sans";
+  font-weight: bold;
+  src: local("Noto Sans Bold"), local("NotoSans-Bold"),
+    url("../assets/NotoSans-Bold.woff2");
+}
+
 :root {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, Roboto,
-    Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  font-family: "Noto Sans", sans-serif;
 
   color-scheme: light dark;
 

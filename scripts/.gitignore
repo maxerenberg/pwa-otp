@@ -1,0 +1,4 @@
+venv/
+*.zip
+*.ttf
+*.woff2

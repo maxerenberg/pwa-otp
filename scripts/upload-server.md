@@ -1,10 +1,8 @@
-# Scripts
-
 **UPDATE**: uploading the settings has been disabled for now because it
 does not work when the PWA is served over HTTPS and the
 upload server is served over plain HTTP. Also see https://stackoverflow.com/a/71109928.
 
-## upload-server
+# upload-server
 
 The upload-server script runs a small HTTP server which accepts JSON file
 uploads and saves them to a file in the current directory named
@@ -12,7 +10,7 @@ uploads and saves them to a file in the current directory named
 overwritten. This is meant to be used for the "Upload settings" feature
 from the Settings page of the app.
 
-### Assumptions
+## Assumptions
 
 This script is meant to be run from your laptop or PC, which should be
 on the same local network as the device which is running the app.
@@ -21,7 +19,7 @@ WARNING: only run this script in trusted private networks, i.e.
 in your house. Do not run it in public networks such as coffee shops
 or airports. Your credentials will be sent in plain text.
 
-### Usage
+## Usage
 
 On Unix-like platforms:
 
