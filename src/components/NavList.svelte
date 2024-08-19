@@ -6,6 +6,7 @@
   import MessagesOutline from "./icons/MessagesOutline.svelte";
   import QuestionCircleOutline from "./icons/QuestionCircleOutline.svelte";
   import UserEditOutline from "./icons/UserEditOutline.svelte";
+  import { GITHUB_PROJECT_URL } from "../lib/constants";
   import { settings, settingsAreReady } from "../lib/userSettings";
   import styles from "./NavList.module.css";
 
@@ -27,7 +28,6 @@
   aria-label="Sidebar"
 >
   <!-- TODO: activeUrl -->
-  <!-- TODO: add real links -->
   <ul role="list" class={styles.list}>
     <!-- Note: settingsAreReady will always be true when isShowingAccounts
          is true; this extra call is just to satisfy the type checker when
@@ -53,11 +53,11 @@
       <CogOutline />
       <span>Settings</span>
     </NavListItem>
-    <NavListItem href="#">
+    <NavListItem href={GITHUB_PROJECT_URL}>
       <QuestionCircleOutline />
       <span>Help</span>
     </NavListItem>
-    <NavListItem href="#">
+    <NavListItem href={`${GITHUB_PROJECT_URL}/issues`}>
       <MessagesOutline />
       <span>Feedback</span>
     </NavListItem>

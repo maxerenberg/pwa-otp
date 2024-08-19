@@ -1,47 +1,53 @@
-# Svelte + TS + Vite
+<p align="center">
+  <img src="./public/favicon.svg" width="120" alt="pwa-otp logo" />
+</p>
 
-This template should help get you started developing with Svelte and TypeScript in Vite.
+<p align="center">An offline-only web-based TOTP application</p>
 
-## Recommended IDE Setup
+# pwa-otp
 
-[VS Code](https://code.visualstudio.com/) + [Svelte](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode).
+This is an offline-only [Progressive Web App](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps)
+to store [TOTP](https://en.wikipedia.org/wiki/Time-based_one-time_password) codes.
+It is an alternative to Microsoft Authenticator, Google Authenticator, etc.
 
-## Need an official Svelte framework?
+## How it works
 
-Check out [SvelteKit](https://github.com/sveltejs/kit#readme), which is also powered by Vite. Deploy anywhere with its serverless-first approach and adapt to various platforms, with out of the box support for TypeScript, SCSS, and Less, and easily-added support for mdsvex, GraphQL, PostCSS, Tailwind CSS, and more.
+- TOTP secrets are stored in the browser's localStorage and may be optionally
+  encrypted with a password which must be entered on startup.
+- TOTP codes are calculated using the TOTP secrets and displayed on the screen.
+- TOTP accounts may be added, deleted, reordered, etc. just like any other TOTP app.
 
-## Technical considerations
+## How to install it
 
-**Why use this over SvelteKit?**
+Visit https://maxerenberg.github.io/pwa-otp from the device on which you would
+like to install the app and click "Get started".
 
-- It brings its own routing solution which might not be preferable for some users.
-- It is first and foremost a framework that just happens to use Vite under the hood, not a Vite app.
+## Advantages over other TOTP apps
 
-This template contains as little as possible to get started with Vite + TypeScript + Svelte, while taking into account the developer experience with regards to HMR and intellisense. It demonstrates capabilities on par with the other `create-vite` templates and is a good starting point for beginners dipping their toes into a Vite + Svelte project.
+- No need to trust someone else's server because there is no server.
+- No minimum iOS/Android version. Should work on older devices as long as
+  a reasonably up-to-date browser is present.
 
-Should you later need the extended capabilities and extensibility provided by SvelteKit, the template has been structured similarly to SvelteKit so that it is easy to migrate.
+## Disadvantages over other TOTP apps
 
-**Why `global.d.ts` instead of `compilerOptions.types` inside `jsconfig.json` or `tsconfig.json`?**
+- No backups. Users are responsible for manually exporting their settings
+  and making their own backup.
+- Currently there is no QR code scanner so users need to manually type the
+  TOTP secret. This may be added in the future if I end up needing it.
 
-Setting `compilerOptions.types` shuts out all other types not explicitly listed in the configuration. Using triple-slash references keeps the default TypeScript setting of accepting type information from the entire workspace, while also adding `svelte` and `vite/client` type information.
+## Motivation
 
-**Why include `.vscode/extensions.json`?**
+This project was born out of frustration with the iOS version of
+Microsoft Authenticator. One day the iOS requirements were bumped to iOS 14,
+but I could not upgrade my iPhone to that OS version because my phone
+was too old. Unfortunately the app iCloud backups eventually stopped working;
+I assume that the developers made backwards-incompatible changes to
+their backend API or something similar.
 
-Other templates indirectly recommend extensions via the README, but this file allows VS Code to prompt the user to install the recommended extension upon opening the project.
-
-**Why enable `allowJs` in the TS template?**
-
-While `allowJs: false` would indeed prevent the use of `.js` files in the project, it does not prevent the use of JavaScript syntax in `.svelte` files. In addition, it would force `checkJs: false`, bringing the worst of both worlds: not being able to guarantee the entire codebase is TypeScript, and also having worse typechecking for the existing JavaScript. In addition, there are valid use cases in which a mixed codebase may be relevant.
-
-**Why is HMR not preserving my local component state?**
-
-HMR state preservation comes with a number of gotchas! It has been disabled by default in both `svelte-hmr` and `@sveltejs/vite-plugin-svelte` due to its often surprising behavior. You can read the details [here](https://github.com/rixo/svelte-hmr#svelte-hmr).
-
-If you have state that's important to retain within a component, consider creating an external store which would not be replaced by HMR.
-
-```ts
-// store.ts
-// An extremely simple external store
-import { writable } from "svelte/store";
-export default writable(0);
-```
+Unfortunately the Microsoft Authenticator app does not allow you to export
+your TOTP secrets offline. You must use the built-in app backups, which, in
+my case, did not even work. Eventually I figured out how to jailbreak my
+iPhone and decrypt the iOS keychain to manually extract the TOTP secrets
+for the app. However, it was a very painful experience. I wanted a TOTP app
+which did not have minimum iOS requirements, and allowed me to easily
+export the secrets if necessary. Thus this project was born.

@@ -4,6 +4,7 @@
   import IfSettings from "./IfSettings.svelte";
   import Button from "./Button.svelte";
   import Spinner from "./Spinner.svelte";
+  import { GITHUB_PROJECT_URL } from "../lib/constants";
   import {
     encodeSettings,
     settings,
@@ -62,9 +63,9 @@
 <IfSettings>
   <Header title="Upload settings" backHref="/#/settings" />
   <main class={commonStyles.mainCenter}>
-    <!-- TODO: add correct href -->
     <p>
-      Please follow <a href="https://github.com">these instructions</a> to receive
+      Please follow
+      <a href={`${GITHUB_PROJECT_URL}/scripts`}>these instructions</a> to receive
       the upload on your laptop or PC.
     </p>
     <form on:submit={onSubmit} class={styles.form}>
