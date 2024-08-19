@@ -245,6 +245,22 @@ function uint8ArraysAreEqual(arr1: Uint8Array, arr2: Uint8Array): boolean {
   return true;
 }
 
+export async function verifyPassword(
+  settings: UnencryptedUserSettings,
+  password: string,
+): Promise<boolean> {
+  if (settings.encryptionMethod !== "password") {
+    throw new Error("Settings do not use a password");
+  }
+  const { key, iv, salt } = settings;
+  // Encrypt data with old key, decrypt with new key
+  const key2 = await deriveKey(password, salt);
+  // Use the salt as data
+  const encryptedSalt = await encrypt({ key, iv, data: salt });
+  const decryptedSalt = await decrypt({ key: key2, iv, data: encryptedSalt });
+  return uint8ArraysAreEqual(salt, decryptedSalt);
+}
+
 async function decryptSettings(
   settings: EncryptedUserSettings,
   password: string,

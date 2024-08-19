@@ -21,13 +21,11 @@ afterEach(commonAfterEach);
 async function fillForm(user: UserEvent, password1: string, password2: string) {
   render(App);
   const input1: HTMLInputElement = await screen.findByLabelText(
-    "Please create a new password",
-    { exact: false },
+    "Please create a new password:",
   );
   await user.type(input1, password1);
   const input2: HTMLInputElement = await screen.findByLabelText(
-    "Please confirm your password",
-    { exact: false },
+    "Please confirm your password:",
   );
   await user.type(input2, password2);
   const button = screen.getByRole("button", { name: "Continue" });
