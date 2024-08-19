@@ -1,6 +1,7 @@
 # Scripts
 
-**UPDATE**: this does not work when the PWA is served over HTTPS and the
+**UPDATE**: uploading the settings has been disabled for now because it
+does not work when the PWA is served over HTTPS and the
 upload server is served over plain HTTP. Also see https://stackoverflow.com/a/71109928.
 
 ## upload-server

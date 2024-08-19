@@ -52,6 +52,11 @@
       isCheckingForUpdates = false;
     }
   }
+
+  // Disable this feature for now because the app is installed from
+  // an HTTPS site but running a local server on a laptop will be
+  // running over plain HTTP, preventing the upload
+  const enableUploadSettings = false;
 </script>
 
 <Header title="Settings" backHref="/" />
@@ -93,12 +98,14 @@
               {/if}
             </button>
           </li>
-          <li>
-            <Link href="/#/settings/upload" class="text-decoration-none">
-              <span>Upload settings</span>
-              <AngleRight />
-            </Link>
-          </li>
+          {#if enableUploadSettings}
+            <li>
+              <Link href="/#/settings/upload" class="text-decoration-none">
+                <span>Upload settings</span>
+                <AngleRight />
+              </Link>
+            </li>
+          {/if}
           <li>
             <Link href="/#/settings/password" class="text-decoration-none">
               <span
