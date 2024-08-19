@@ -4,7 +4,10 @@
   import IfSettings from "./IfSettings.svelte";
   import AngleRight from "./icons/AngleRight.svelte";
   import Spinner from "./Spinner.svelte";
-  import { updateServiceWorkerWithoutReload } from "../lib/pwa";
+  import {
+    isInstalledAsPWA,
+    updateServiceWorkerWithoutReload,
+  } from "../lib/pwa";
   import {
     encodeSettings,
     settings,
@@ -43,6 +46,7 @@
     }
   }
 
+  const canCheckForUpdates = isInstalledAsPWA();
   let isCheckingForUpdates = false;
   async function checkForUpdates() {
     isCheckingForUpdates = true;
@@ -120,20 +124,22 @@
     <section class={styles.section}>
       <h3 class={styles.sectionTitle}>SYSTEM</h3>
       <ul class={styles.sectionList}>
-        <li>
-          <button on:click={checkForUpdates} disabled={isCheckingForUpdates}>
-            <span>Check for updates</span>
-            {#if isCheckingForUpdates}
-              <Spinner
-                stroke="var(--app-section-icon-color)"
-                height="1.25em"
-                class={styles.spinner}
-              />
-            {:else}
-              <AngleRight />
-            {/if}
-          </button>
-        </li>
+        {#if canCheckForUpdates}
+          <li>
+            <button on:click={checkForUpdates} disabled={isCheckingForUpdates}>
+              <span>Check for updates</span>
+              {#if isCheckingForUpdates}
+                <Spinner
+                  stroke="var(--app-section-icon-color)"
+                  height="1.25em"
+                  class={styles.spinner}
+                />
+              {:else}
+                <AngleRight />
+              {/if}
+            </button>
+          </li>
+        {/if}
         <li>
           <div>
             <span>Commit hash</span>
