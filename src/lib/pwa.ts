@@ -1,6 +1,5 @@
 import { useRegisterSW } from "virtual:pwa-register/svelte";
-import { onMount } from "svelte";
-import { get, readable } from "svelte/store";
+import { readable } from "svelte/store";
 import { redirectTo } from "./routing";
 
 export const { needRefresh, updateServiceWorker } = useRegisterSW({
