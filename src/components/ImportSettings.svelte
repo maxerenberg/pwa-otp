@@ -59,7 +59,7 @@
     inputRef?.click();
   }
 
-  const backHref = isInstalledAsPWA() ? "/" : "/#/setup/confirm-skip-pwa";
+  $: backHref = $isInstalledAsPWA ? "/" : "/#/setup/confirm-skip-pwa";
 </script>
 
 <Header title="Import settings" {backHref} />

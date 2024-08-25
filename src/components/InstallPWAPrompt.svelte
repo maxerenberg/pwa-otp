@@ -4,7 +4,7 @@
   import Item from "./InstallPWAPromptItem.svelte";
   import Button from "./Button.svelte";
   import Link from "./Link.svelte";
-  import { redirectToSetupAfterPWAInstallation } from "../lib/pwa";
+  import { isInstalledAsPWA, redirectAfterPWAInstallation } from "../lib/pwa";
   import commonStyles from "./common.module.css";
   import styles from "./InstallPWAPrompt.module.css";
 
@@ -20,7 +20,10 @@
     if (matches[0] === "Firefox") return "Firefox";
     return undefined;
   })();
-  redirectToSetupAfterPWAInstallation();
+
+  $: if ($isInstalledAsPWA) {
+    redirectAfterPWAInstallation();
+  }
 </script>
 
 <Header title="Install PWA" backHref="/" />

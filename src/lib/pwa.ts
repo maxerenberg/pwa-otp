@@ -1,5 +1,6 @@
 import { useRegisterSW } from "virtual:pwa-register/svelte";
 import { onMount } from "svelte";
+import { get, readable } from "svelte/store";
 import { redirectTo } from "./routing";
 
 export const { needRefresh, updateServiceWorker } = useRegisterSW({
@@ -22,22 +23,17 @@ export async function updateServiceWorkerWithoutReload() {
   await registration.update();
 }
 
-export function redirectToSetupAfterPWAInstallation() {
+export const isInstalledAsPWA = readable(false, (set) => {
   // See https://web.dev/learn/pwa/detection
-  // Note: this does not work on iOS due to storage isolation (user will be
-  // redirected to app home page)
-  onMount(() => {
-    const listener = (ev: MediaQueryListEvent) => {
-      if (ev.matches) {
-        redirectTo("/#/setup/import");
-      }
-    };
-    const match = window.matchMedia("(display-mode: standalone)");
-    match.addEventListener("change", listener);
-    return () => match.removeEventListener("change", listener);
-  });
-}
+  const match = window.matchMedia("(display-mode: standalone)");
+  set(match.matches);
+  const listener = (ev: MediaQueryListEvent) => set(ev.matches);
+  match.addEventListener("change", listener);
+  return () => match.removeEventListener("change", listener);
+});
 
-export function isInstalledAsPWA(): boolean {
-  return window.matchMedia("(display-mode: standalone)").matches;
+// Note: this does not work on iOS due to storage isolation (user will be
+// redirected to app home page)
+export function redirectAfterPWAInstallation() {
+  redirectTo("/#/setup/import");
 }

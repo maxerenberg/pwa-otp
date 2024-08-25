@@ -5,7 +5,7 @@
   import { isInstalledAsPWA } from "../lib/pwa";
   import commonStyles from "./common.module.css";
 
-  const getStartedHref = isInstalledAsPWA()
+  $: getStartedHref = $isInstalledAsPWA
     ? "/#/setup/import"
     : "/#/setup/install-pwa";
 </script>

@@ -46,7 +46,7 @@
     }
   }
 
-  const canCheckForUpdates = isInstalledAsPWA();
+  $: canCheckForUpdates = $isInstalledAsPWA;
   let isCheckingForUpdates = false;
   async function checkForUpdates() {
     isCheckingForUpdates = true;

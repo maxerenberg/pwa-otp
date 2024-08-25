@@ -2,11 +2,13 @@
   import Header from "./Header.svelte";
   import Button from "./Button.svelte";
   import Link from "./Link.svelte";
-  import { redirectToSetupAfterPWAInstallation } from "../lib/pwa";
+  import { isInstalledAsPWA, redirectAfterPWAInstallation } from "../lib/pwa";
   import commonStyles from "./common.module.css";
   import styles from "./ConfirmSkipPWA.module.css";
 
-  redirectToSetupAfterPWAInstallation();
+  $: if ($isInstalledAsPWA) {
+    redirectAfterPWAInstallation();
+  }
 </script>
 
 <Header title="Install PWA" backHref="/#/setup/install-pwa" />
