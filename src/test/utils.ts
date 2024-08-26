@@ -120,8 +120,11 @@ export async function addTOTPAccount(
   )[0];
   expect(button).toBeDefined();
   await user.click(button);
+  await user.click(
+    await screen.findByRole("button", { name: "Enter code manually" }),
+  );
   let input = await screen.findByLabelText("Issuer");
-  expect(location.hash).toBe("#/add-account");
+  expect(location.hash).toBe("#/add-account/manual");
   await user.type(input, issuer);
   input = await screen.findByLabelText("Name");
   await user.type(input, name);

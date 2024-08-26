@@ -1,0 +1,73 @@
+.form {
+  margin-top: 1rem;
+}
+
+.sectionTitle {
+  color: var(--app-section-title-color);
+  padding: 0.5rem 1rem;
+}
+
+.textInputs {
+  background-color: var(--app-section-bg);
+  border-top: var(--app-section-border);
+  border-bottom: var(--app-section-border);
+  padding-left: 1rem;
+
+  input {
+    border: none;
+    width: 100%;
+    padding: 0.75em 0.25em;
+  }
+
+  /* last input is wrapped in a div */
+  > input {
+    border-bottom: var(--app-section-border);
+  }
+}
+
+.secretContainer {
+  position: relative;
+
+  .eyeButton {
+    position: absolute;
+    top: 0;
+    right: 1rem;
+    transform: translateY(50%);
+    > .eyeIcon {
+      color: var(--app-section-icon-color);
+    }
+  }
+}
+
+.digitsFieldset {
+  margin-top: 2rem;
+  margin-left: 1rem;
+  display: flex;
+
+  .legend {
+    padding-right: 1rem;
+  }
+
+  label:not(:last-of-type) {
+    display: block;
+    padding-right: 1rem;
+  }
+}
+
+.form button[type="submit"] {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+  margin-top: 2rem;
+  width: 100%;
+  border-radius: 0;
+
+  &:not([disabled]) {
+    font-weight: bold;
+  }
+}
+
+.errorMessage {
+  text-align: center;
+  margin-top: 2rem;
+  color: var(--form-error-msg-color);
+}

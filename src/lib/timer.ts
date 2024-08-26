@@ -15,9 +15,9 @@ function createTimerStore() {
     const millisUntilNextSecond = 1000 - (nowMillis % 1000);
     let intervalID = 0;
     // Start the interval when the next second begins
-    let timeoutID = setTimeout(() => {
+    let timeoutID = window.setTimeout(() => {
       set(getNow());
-      intervalID = setInterval(() => {
+      intervalID = window.setInterval(() => {
         set(getNow());
       }, 1000);
       timeoutID = 0;

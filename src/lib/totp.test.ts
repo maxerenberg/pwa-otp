@@ -4,7 +4,9 @@ import {
   base32encode,
   TOTPCalculator,
   ParseError,
+  parseOTPAuthURL,
   type Digits,
+  type TOTPAccount,
 } from "./totp";
 
 // Test cases can be generated using Python, e.g.
@@ -55,3 +57,25 @@ test.each(totpTestCases)(
     expect(code).toBe(expected);
   },
 );
+
+// Extracted from https://gist.github.com/kcramer/c6148fb906e116d84e4bde7b2ab56992
+// Use `list(base64.b32decode("..."))` in Python to decode the secret
+const otpauthTestCases: [string, Omit<TOTPAccount, "id">][] = [
+  [
+    "otpauth://totp/ACME%20Co:jdoe@example.com?secret=AUSJD7LZ5H27TAC7NW2IJMATDMVDUPUG&issuer=ACME%20Co&algorithm=SHA1&digits=6&period=30",
+    {
+      issuer: "ACME Co",
+      name: "jdoe@example.com",
+      secret: new Uint8Array([
+        5, 36, 145, 253, 121, 233, 245, 249, 128, 95, 109, 180, 132, 176, 19,
+        27, 42, 58, 62, 134,
+      ]),
+      algorithm: "SHA1",
+      digits: 6,
+    },
+  ],
+];
+test.each(otpauthTestCases)("parseOTPAuthURL(url: %s)", (url, expected) => {
+  const totpInfo = parseOTPAuthURL(url);
+  expect(totpInfo).toEqual(expected);
+});

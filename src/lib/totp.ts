@@ -187,3 +187,71 @@ export function otpCodeToStr(code: number, digits: Digits): string {
   const s = code.toString().padStart(digits, "0");
   return s.substring(0, halfLen) + " " + s.substring(halfLen);
 }
+
+// See https://github.com/google/google-authenticator/wiki/Key-Uri-Format
+export function parseOTPAuthURL(
+  url: string,
+): Omit<TOTPAccount, "id"> | ParseError {
+  const prefix = "otpauth://totp/";
+  if (!url.startsWith(prefix)) {
+    return new ParseError(`URL does not begin with '${prefix}': ${url}`);
+  }
+  url = url.substring(prefix.length);
+  const colonIdx = url.indexOf(":");
+  const qmarkIdx = url.indexOf("?");
+  if (colonIdx === -1 || qmarkIdx === -1 || colonIdx >= qmarkIdx) {
+    return new ParseError(`URL does not follow otpauth format: ${url}`);
+  }
+  const issuer = decodeURIComponent(url.substring(0, colonIdx));
+  const name = decodeURIComponent(url.substring(colonIdx + 1, qmarkIdx));
+  const params = url
+    .substring(qmarkIdx + 1)
+    .split("&")
+    .map((s) => decodeURIComponent(s).split("="));
+  let secret: Uint8Array | null = null;
+  let algorithm: HashAlgorithm = "SHA1";
+  let digits: Digits = 6;
+  for (const [key, val] of params) {
+    if (typeof val !== "string") {
+      return new ParseError(`URL parameters are ill-formed: ${url}`);
+    }
+    if (key === "secret") {
+      const decodedSecret = base32decode(val);
+      if (decodedSecret instanceof ParseError) return decodedSecret;
+      secret = decodedSecret;
+    } else if (key === "issuer") {
+      if (val !== issuer) {
+        return new ParseError(
+          `The issuer parameter ${val} is not equal to the label prefix ${issuer}`,
+        );
+      }
+    } else if (key === "algorithm") {
+      if (!hashAlgorithms.includes(val as any)) {
+        return new ParseError(`Invalid hash algorithm ${val}`);
+      }
+      algorithm = val as HashAlgorithm;
+    } else if (key === "digits") {
+      const parsedVal = parseInt(val);
+      if (!([6, 8] as const).includes(parsedVal as any)) {
+        return new ParseError(`Invalid digits ${val}`);
+      }
+      digits = parsedVal as Digits;
+    } else if (key === "period") {
+      if (val !== "30") {
+        return new ParseError(`Period must be 30: ${val}`);
+      }
+    } else {
+      return new ParseError(`Unrecognized key '${key}'`);
+    }
+  }
+  if (!secret) {
+    return new ParseError("Secret is missing from URL");
+  }
+  return {
+    secret,
+    issuer,
+    name,
+    algorithm,
+    digits,
+  };
+}

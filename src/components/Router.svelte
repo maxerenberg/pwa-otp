@@ -8,6 +8,8 @@
   import Settings from "./Settings.svelte";
   import DeleteAccount from "./DeleteAccount.svelte";
   import AddAccount from "./AddAccount.svelte";
+  import AddAccountManual from "./AddAccountManual.svelte";
+  import AddAccountQR from "./AddAccountQR.svelte";
   import Account from "./Account.svelte";
   import AccountSettings from "./AccountSettings.svelte";
   import InstallPwaPrompt from "./InstallPWAPrompt.svelte";
@@ -30,6 +32,8 @@
     "/#/settings/password": AddOrChangePassword,
     "/#/settings/upload": UploadSettings,
     "/#/add-account": AddAccount,
+    "/#/add-account/manual": AddAccountManual,
+    "/#/add-account/qr": AddAccountQR,
     "/#/enter-password": EnterPasswordPage,
   };
   const regexRoutes: [RegExp, ComponentType][] = [
