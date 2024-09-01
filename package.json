@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "format": "prettier --write .",
-    "test": "vitest --run",
+    "test": "vitest --dir src --run",
     "stylelint": "stylelint \"src/**/*.{css,svelte}\""
   },
   "browserslist": [
