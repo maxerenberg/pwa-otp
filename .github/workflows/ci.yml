@@ -25,7 +25,26 @@ jobs:
         run: npm ci
       - run: npm run check
       - run: npm run stylelint
-      - run: npm run test
+      - name: Run unit tests
+        run: npm run test
+      # Adapted from https://github.com/microsoft/playwright/issues/7249#issuecomment-2141021209
+      - name: Get Playwright version
+        run: |
+          echo PLAYWRIGHT_VERSION=$(npm ls @playwright/test | grep @playwright | sed 's/.*@//') >> $GITHUB_ENV
+      - name: Cache Playwright browsers
+        id: cache-playwright-browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-browsers-${{ runner.os }}-${{ env.PLAYWRIGHT_VERSION }}
+      - name: Install Playwright system dependencies
+        run: node_modules/.bin/playwright install-deps chromium
+      - name: Install Playwright browsers
+        run: node_modules/.bin/playwright install chromium
+        # Playwright will not re-download the browser if the latest version is already cached
+        # if: steps.cache-playwright-browsers-outputs.cache-hit != 'true'
+      - name: Run E2E tests
+        run: node_modules/.bin/playwright test --project chromium
       - name: Build (PR)
         if: github.event_name == 'pull_request'
         run: npm run build
